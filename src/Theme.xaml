@@ -1,0 +1,13 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:AtTerm" 
+                    xmlns:System="clr-namespace:System;assembly=mscorlib"
+>
+    <SolidColorBrush x:Key="ThemeBg" Color="White"/>
+    <SolidColorBrush x:Key="SentFg" Color="#FF2D6308"/>
+    <GridLength x:Key="LeftMargin">30</GridLength>
+    <System:Double x:Key="LargeFontSize">18</System:Double>
+    <SolidColorBrush x:Key="RecvFg" Color="#FF63085B"/>
+    <SolidColorBrush x:Key="ConnectFg" Color="#FF53B824"/>
+    <SolidColorBrush x:Key="DisconnectFg" Color="#FFBF1C1C"/>
+</ResourceDictionary>

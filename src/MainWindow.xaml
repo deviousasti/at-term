@@ -6,33 +6,108 @@
         xmlns:local="clr-namespace:AtTerm" xmlns:controls="clr-namespace:System.Windows.Controls"
         xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="AtTerm.MainWindow"
         mc:Ignorable="d"
-        Title="AT Term" Height="450" Width="800" FontFamily="{StaticResource AppFont}">
+        Title="AT Term" Height="450" Width="800" FontFamily="{StaticResource AppFont}" Background="{DynamicResource ThemeBg}" d:DataContext="{d:DesignInstance {x:Type local:TermViewModel}}">
     <Window.Resources>
-        <System:Double x:Key="LargeFontSize">18</System:Double>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </Window.Resources>
-    <Window.DataContext>
-        <local:TermViewModel/>
-    </Window.DataContext>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
-            <RowDefinition Height="293*"/>
-            <RowDefinition Height="50*"/>
+            <RowDefinition/>
+            <RowDefinition Height="30" MinHeight="30" MaxHeight="90"/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
-        <ListView Grid.RowSpan="3" />
 
-        <StackPanel Grid.Row="2" Background="#FFF1F1F1">
-        </StackPanel>
-        <TextBlock Margin="10,17" Text="Click the favourite button to save commands here" Grid.Row="2" VerticalAlignment="Center"/>
+        <ListView ItemsSource="{Binding Log}" Grid.Row="1" Background="{x:Null}" FontFamily="Consolas" ScrollViewer.VerticalScrollBarVisibility="Visible" BorderThickness="0" Margin="0,0,0,5" ScrollViewer.ScrollChanged="ListView_ScrollChanged_1">
+            <ListView.Resources>
+                <DataTemplate DataType="{x:Type local:SendEvent}">
+                    <Grid d:DesignWidth="114.75">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{DynamicResource LeftMargin}"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock FontFamily="{StaticResource IconFont}" Foreground="{StaticResource SentFg}" VerticalAlignment="Center" FontSize="16" Margin="4,0,0,0">chevron_right</TextBlock>
+                        <TextBlock Text="{Binding Text}"  Foreground="{StaticResource SentFg}" Grid.Column="1" Padding="4" />
+                    </Grid>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type local:ReceiveEvent}">
+                    <Grid Margin="4" d:DesignWidth="114.75">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{DynamicResource LeftMargin}"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock FontFamily="{StaticResource IconFont}" Foreground="{DynamicResource RecvFg}" VerticalAlignment="Center" FontSize="16">chevron_left</TextBlock>
+                        <TextBlock Text="{Binding Text}" Grid.Column="1" />
+                    </Grid>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type local:ConnectionEvent}">
+                    <Grid Margin="4" d:DesignWidth="114.75">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{DynamicResource LeftMargin}"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock FontFamily="{StaticResource IconFont}" Foreground="{DynamicResource ConnectFg}" VerticalAlignment="Center" FontSize="16">link</TextBlock>
+                        <TextBlock Text="{Binding Text}" Foreground="{StaticResource ConnectFg}" Grid.Column="1" />
+                    </Grid>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type local:DisconnectionEvent}">
+                    <Grid Margin="4" d:DesignWidth="114.75">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{DynamicResource LeftMargin}"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock FontFamily="{StaticResource IconFont}" Foreground="{DynamicResource DisconnectFg}" VerticalAlignment="Center" FontSize="16">link_off</TextBlock>
+                        <TextBlock Text="{Binding Text}" Foreground="{StaticResource DisconnectFg}" Grid.Column="1" />
+                    </Grid>
+                </DataTemplate>
+
+                <!--<Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>-->
+            </ListView.Resources>
+        </ListView>
+
+        <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"/>
+
+        <Grid Grid.Row="2" Background="#FFEAEAEA">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="heart_button" Command="{Binding AddFavouritesCommand}" Content="favorite" Background="Transparent" FontFamily="{StaticResource IconFont}"  FontSize="18"  Foreground="Red" BorderThickness="0" ToolTip="Add to favourites" />
+            <ScrollViewer  Grid.Column="1" VerticalScrollBarVisibility="Hidden">
+                <ItemsControl ItemsSource="{Binding Favourites}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel IsItemsHost="True" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Content="{Binding}" 
+                                    Click="FavouriteItemClicked" 
+                                    MouseRightButtonDown="FavouriteItemRemoveClicked" 
+                                    Background="{x:Null}" 
+                                    BorderBrush="#FFC1C1C1" Padding="4,6" BorderThickness="1,0,0,0"
+                            />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            <TextBlock Text="Click the favourite button to save commands here" Grid.Column="1" VerticalAlignment="Center" Visibility="{Binding NoFavourites, Converter={StaticResource BooleanToVisibilityConverter}}" />
+        </Grid>
+
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="50"/>
-                <ColumnDefinition Width="703*"/>
-                <ColumnDefinition Width="39*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="50"/>
             </Grid.ColumnDefinitions>
 
-            <controls:DropDownButton Content="AT+" BorderThickness="0" Background="White" Foreground="#FF001EA4" FontSize="{StaticResource LargeFontSize}">
+            <controls:DropDownButton Content="AT+" BorderThickness="0" Background="{DynamicResource ThemeBg}" Foreground="#FF001EA4" FontSize="{StaticResource LargeFontSize}" ToolTip="Mode">
                 <controls:DropDownButton.DropDown>
                     <ContextMenu FontSize="{StaticResource LargeFontSize}" ItemsSource="{Binding AvailableModes}">
 
@@ -40,16 +115,23 @@
                 </controls:DropDownButton.DropDown>
             </controls:DropDownButton>
 
-            <controls:AutoFilteredComboBox x:Name="CommandInput" IsEditable="True" FontSize="{StaticResource LargeFontSize}" BorderThickness="0" Padding="0,12" Background="White"
+            <controls:AutoFilteredComboBox x:Name="CommandInput" IsEditable="True" 
+                FontSize="{StaticResource LargeFontSize}" 
+                BorderThickness="0" Padding="0,12" 
+                Background="{DynamicResource ThemeBg}"
                 ItemsSource="{Binding AvailableCommands}"
                 SelectedValue="{Binding SelectedCommand, Mode=TwoWay}"
                 DisplayMemberPath="Command"
                 Text="{Binding CommandText, Mode=TwoWay}"
                 IsTextSearchEnabled="False" Grid.Column="1"  
-                KeyUp="OnSubmit"
+                PreviewKeyDown="OnSubmit"
             />
 
-            <Button Content="favorite" Grid.Column="2" Background="Transparent" FontFamily="{StaticResource IconFont}" Foreground="#FFFF0404" BorderThickness="0" />
+            <Button x:Name="button" Grid.Column="2" 
+                    Command="{Binding SendCommand}" 
+                    Content="send" ToolTip="Send"
+                    Background="Transparent" 
+                    FontFamily="{StaticResource IconFont}"  FontSize="18"  Foreground="Black" BorderThickness="0"  />
         </Grid>
 
         <!--#region Typing Bar -->

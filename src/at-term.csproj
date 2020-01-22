@@ -38,6 +38,7 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -59,10 +60,16 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AtCommand.cs" />
+    <Compile Include="ITTy.cs" />
     <Compile Include="MVVM\DropDownButton.cs" />
     <Compile Include="MVVM\RelayCommand.cs" />
+    <Compile Include="SerialTty.cs" />
     <Compile Include="TermViewModel.cs" />
     <Compile Include="MVVM\ViewModelBase.cs" />
+    <Page Include="Theme.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -96,7 +103,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <Resource Include="Fonts\MaterialIcons-Regular.ttf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
