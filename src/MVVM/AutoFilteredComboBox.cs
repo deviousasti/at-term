@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 
@@ -84,10 +85,11 @@ namespace System.Windows.Controls
         }
 
         protected TextBox EditableTextBox { get; private set; }
+        protected ToggleButton ToggleButton { get; private set; }
 
         #endregion
 
-        #region | Handle focus |
+        #region Focus
         /// <summary>
         /// Invoked whenever an unhandled <see cref="UIElement.GotFocus" /> event
         /// reaches this element in its route.
@@ -110,7 +112,10 @@ namespace System.Windows.Controls
             AddHandler(TextBox.TextChangedEvent, new TextChangedEventHandler(OnTextChanged));
             KeyUp += AutoFilteredComboBox_KeyUp;
             this.EditableTextBox = GetTemplateChild("PART_EditableTextBox") as TextBox;
+            (this.EditableTextBox.Parent as Border).Background = this.Background;
 
+            this.ToggleButton = GetTemplateChild("toggleButton") as ToggleButton;
+            this.ToggleButton.Background = this.Background;
             this.IsTextSearchEnabled = false;
         }
 
@@ -147,7 +152,8 @@ namespace System.Windows.Controls
             }
         }
 
-        #region | Handle filtering |
+        #region Handle filtering
+
         private void RefreshFilter()
         {
             if (String.IsNullOrEmpty(Text))
@@ -254,6 +260,8 @@ namespace System.Windows.Controls
         {
             EditableTextBox.SelectionStart = position;
             EditableTextBox.SelectionLength = length;
+            if (position > this.Text?.Length)
+                IsDropDownOpen = false;
         }
     }
 
