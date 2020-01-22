@@ -18,7 +18,7 @@
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
 
-        <ListView ItemsSource="{Binding Log}" Grid.Row="1" Background="{x:Null}" FontFamily="Consolas" ScrollViewer.VerticalScrollBarVisibility="Visible" BorderThickness="0" Margin="0,0,0,5" ScrollViewer.ScrollChanged="ListView_ScrollChanged_1">
+        <ListView ItemsSource="{Binding Log}" Grid.Row="1" Background="{x:Null}" FontFamily="Consolas" ScrollViewer.VerticalScrollBarVisibility="Visible" BorderThickness="0" Margin="0,0,0,5" ScrollViewer.ScrollChanged="OnListViewScroll">
             <ListView.Resources>
                 <DataTemplate DataType="{x:Type local:SendEvent}">
                     <Grid d:DesignWidth="114.75">

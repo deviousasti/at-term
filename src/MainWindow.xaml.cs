@@ -20,9 +20,11 @@ namespace AtTerm
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public MainWindow(TermViewModel viewModel)
         {
             InitializeComponent();
+            this.DataContext = viewModel;
+
         }
 
         public TermViewModel ViewModel => this.DataContext as TermViewModel;
@@ -31,13 +33,17 @@ namespace AtTerm
         {
             if (e.Key == Key.Enter)
             {
-                ViewModel.OnSubmit();
+                if (e.KeyboardDevice.Modifiers == ModifierKeys.Control)
+                    ViewModel.OnContinuation();
+                else
+                    ViewModel.OnSubmit();
             }
 
-            if (e.Key == Key.End)
+            if (e.Key == Key.Tab)
             {
-                ViewModel.AutoComplete();
+                ViewModel.AutoCompleteText();
                 CommandInput.SetCaretPosition(int.MaxValue);
+                e.Handled = true;
             }
 
             if (e.Key == Key.Up)
@@ -46,8 +52,44 @@ namespace AtTerm
                 CommandInput.SetCaretPosition(int.MaxValue);
             }
 
-        }
-        
+            if (e.Key == Key.Escape)
+            {
+                ViewModel.ClearText();
+            }
 
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+            ViewModel.OnExit();
+        }
+
+        private void FavouriteItemClicked(object sender, RoutedEventArgs e)
+        {
+            if (e.Source is Button button)
+                ViewModel.Send(button.DataContext as string);
+        }
+
+        private void FavouriteItemRemoveClicked(object sender, MouseButtonEventArgs e)
+        {
+            if (e.Source is Button button)
+                ViewModel.RemoveFavourite(button.DataContext as string);
+        }
+
+        private void OnListViewScroll(object sender, ScrollChangedEventArgs e)
+        {
+            var delta = e.VerticalOffset + e.ViewportHeight - e.ExtentHeight;
+            if (delta == -1)
+            {
+                if (e.Source is ListView listView)
+                {
+                    if (listView.Items.Count > 0)
+                        listView.ScrollIntoView(listView.Items.GetItemAt(listView.Items.Count - 1));
+                }
+
+            }
+
+        }
     }
 }
