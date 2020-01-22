@@ -1,0 +1,10 @@
+﻿<Application x:Class="at_term.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:at_term"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <FontFamily x:Key="IconFont">./Fonts/#Material Icons</FontFamily>
+        <FontFamily x:Key="AppFont">Segoe UI</FontFamily>
+    </Application.Resources>
+</Application>
