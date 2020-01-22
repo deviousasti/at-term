@@ -9,7 +9,30 @@
         Title="AT Term" Height="450" Width="800" FontFamily="{StaticResource AppFont}" Background="{DynamicResource ThemeBg}" d:DataContext="{d:DesignInstance {x:Type local:TermViewModel}}">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <Storyboard x:Key="Heartbeat">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.FontSize)" Storyboard.TargetName="heart_button">
+                <EasingDoubleKeyFrame KeyTime="0" Value="18"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="24"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="18"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="CommandBeat">
+            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="CommandInput">
+                <EasingColorKeyFrame KeyTime="0" Value="Black"/>
+                <EasingColorKeyFrame KeyTime="0:0:0.1" Value="#FF05BD93"/>
+                <EasingColorKeyFrame KeyTime="0:0:0.2" Value="Black"/>
+            </ColorAnimationUsingKeyFrames>
+        </Storyboard>
     </Window.Resources>
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="heart_button">
+            <BeginStoryboard x:Name="Heartbeat_BeginStoryboard" Storyboard="{StaticResource Heartbeat}"/>
+        </EventTrigger>
+        <EventTrigger RoutedEvent="Selector.SelectionChanged" SourceName="CommandInput">
+            <BeginStoryboard x:Name="CommandBeat_BeginStoryboard" Storyboard="{StaticResource CommandBeat}"/>
+        </EventTrigger>
+        <EventTrigger RoutedEvent="UIElement.TextInput" SourceName="CommandInput"/>
+    </Window.Triggers>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
@@ -118,7 +141,7 @@
             <controls:AutoFilteredComboBox x:Name="CommandInput" IsEditable="True" 
                 FontSize="{StaticResource LargeFontSize}" 
                 BorderThickness="0" Padding="0,12" 
-                Background="{DynamicResource ThemeBg}"
+                Background="White"
                 ItemsSource="{Binding AvailableCommands}"
                 SelectedValue="{Binding SelectedCommand, Mode=TwoWay}"
                 DisplayMemberPath="Command"
