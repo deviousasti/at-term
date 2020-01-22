@@ -1,0 +1,3 @@
+AT+CFUN=<fun>,<fun>
+AT+CMGR
+AT+TEST=<num>
