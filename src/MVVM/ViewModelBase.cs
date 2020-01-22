@@ -1,6 +1,7 @@
-﻿using System.ComponentModel;
+﻿using AtTerm;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using App = at_term.App;
+
 namespace System.Windows
 {
     public class ViewModelBase : INotifyPropertyChanged
@@ -9,10 +10,21 @@ namespace System.Windows
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
+            RaisePropertyChanged(propertyName);
+        }
+
+        protected virtual void RaisePropertyChanged(string propertyName)
+        {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public static bool InDesignMode => !(Application.Current is App);
+        
+        protected void DispatcherInvoke(Action action)
+        {
+            App.Current.Dispatcher.Invoke(action);
+        }
+
 
     }
 }
