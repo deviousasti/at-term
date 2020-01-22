@@ -1,0 +1,3 @@
+﻿<AtTerm:TermViewModel xmlns:AtTerm="clr-namespace:AtTerm" xmlns:Markup="clr-namespace:System.Windows.Markup;assembly=System.Xaml" xmlns:System="clr-namespace:System;assembly=mscorlib" xmlns:Windows="clr-namespace:System.Windows" CommandText="Duis curae donec curabitur" HasCommand="True" InDesignMode="False">
+	
+</AtTerm:TermViewModel>
