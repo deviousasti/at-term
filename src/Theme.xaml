@@ -10,4 +10,57 @@
     <SolidColorBrush x:Key="RecvFg" Color="#FF63085B"/>
     <SolidColorBrush x:Key="ConnectFg" Color="#FF53B824"/>
     <SolidColorBrush x:Key="DisconnectFg" Color="#FFBF1C1C"/>
+    
+  
+    <Style TargetType="ComboBox">
+        <Setter Property="Background" Value="{StaticResource ThemeBg}" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Padding" Value="4" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
+
+
+
+    <Style TargetType="ToolTip">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="BorderBrush" Value="DarkGray" />
+    </Style>
+    
+    <ControlTemplate x:Key="Button" TargetType="{x:Type ButtonBase}">
+        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+            <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" TargetName="border" Value="#FFDEDEDE"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" TargetName="border" Value="#FFD6D6D6"/>
+                <Setter Property="BorderBrush" TargetName="border" Value="#FF2C628B"/>
+            </Trigger>
+            <Trigger Property="ToggleButton.IsChecked" Value="True">
+                <Setter Property="Background" TargetName="border" Value="{Binding RelativeSource={RelativeSource Self}, Path=Background}"/>
+                <Setter Property="BorderBrush" TargetName="border" Value="#FF245A83"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <Style TargetType="Button">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="4" />
+        <Setter Property="Template" Value="{StaticResource Button}" />
+    </Style>
+
+    <Style TargetType="ToggleButton">
+        <Setter Property="BorderBrush" Value="#FFD6D6D6" />
+        <Setter Property="Background" Value="White" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Padding" Value="4" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template" Value="{StaticResource Button}" />
+
+    </Style>
+
 </ResourceDictionary>
