@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 
@@ -36,11 +37,27 @@ namespace AtTerm
 
         public override string ToString() => Command;
 
+        public static string MTKCheckSum(string cmd)
+        {
+            cmd = cmd.Trim('$');
+            // Compute the checksum by XORing all the character values in the string.
+            var checksum = 0;
+            for (var i = 0; i < cmd.Length; i++)
+            {
+                checksum = checksum ^ cmd[i];
+            }
+
+            // Convert it to hexadecimal (base-16, upper case, most significant nybble first).
+            var hexsum = checksum.ToString("X").PadLeft(2, '0');
+            return hexsum;
+        }
+
         public static string Qualify(string commandText)
         {
             return String.IsNullOrWhiteSpace(commandText) ? "AT" :
                 commandText.StartsWith(">") ? commandText.Substring(1) :
-                    $"AT+{commandText}";
+                commandText.StartsWith("$") ? $"{commandText}*{MTKCheckSum(commandText)}" :
+                $"AT+{commandText}";
         }
 
         public static string Unqualify(string commandText)
