@@ -19,7 +19,7 @@ namespace AtTerm
 
     public abstract class TextEvent
     {
-        public string Text { get; set; }
+        public string Text { get; set; } = String.Empty;
 
         public override string ToString()
         {
@@ -29,31 +29,22 @@ namespace AtTerm
 
     public class SendEvent : TextEvent
     {
-
+        public bool Raw { get; set; }
     }
 
-    public class ReceiveEvent : TextEvent
-    {
+    public class ReceiveEvent : TextEvent { }
 
-    }
+    public class ConnectionEvent : TextEvent { }
 
-    public class ConnectionEvent : TextEvent
-    {
-
-    }
-
-    public class DisconnectionEvent : TextEvent
-    {
-
-    }
+    public class DisconnectionEvent : TextEvent { }
 
     public partial class TermViewModel : ViewModelBase
     {
         #region Properties
 
         public AtCommand[] AllCommands { get; set; }
-        
-        public AtTerm.ITTy TTy { get; set; }
+
+        public AtTerm.SerialTty TTy { get; set; }
 
         private string _commandText;
         public string CommandText
@@ -67,10 +58,14 @@ namespace AtTerm
             }
         }
 
-        public string QualifiedCommmandText =>
-            String.IsNullOrWhiteSpace(CommandText) ? "AT" :
-                CommandText.StartsWith(">") ? CommandText.Substring(1) :
-                    $"AT+{CommandText}";
+        public void SendLast()
+        {
+            var lastSent = History.FirstOrDefault();
+            CommandText = lastSent;
+            Send();
+        }
+
+        public string QualifiedCommmandText => AtCommand.Qualify(CommandText);            
 
 
         private AtCommand _selectedCommand;
@@ -105,11 +100,27 @@ namespace AtTerm
         public ObservableCollection<TextEvent> Log { get; set; } =
             new ObservableCollection<TextEvent>();
 
+        private TextEvent _selectedLog;
+
+        public TextEvent SelectedLog
+        {
+            get => _selectedLog;
+            set
+            {
+                _selectedLog = value;
+                OnPropertyChanged();
+                if (value is SendEvent sent)
+                {
+                    CommandText = AtCommand.Unqualify(sent.Text);
+                }
+            }
+        }
+
         #endregion
 
         public TermViewModel(ITTy tty)
         {
-            this.TTy = tty;
+            this.TTy = tty as SerialTty;
             tty.Received += text => Write(new ReceiveEvent { Text = text });
             tty.Connected += text => Write(new ConnectionEvent { Text = text });
             tty.Disconnected += text => Write(new DisconnectionEvent { Text = text });
@@ -120,7 +131,7 @@ namespace AtTerm
             SendCommand =
                 new RelayCommand(() => Send(), () => true);
 
-            //if (InDesignMode)
+            if (InDesignMode)
             {
                 Log = new ObservableCollection<TextEvent>
                 {
@@ -130,9 +141,7 @@ namespace AtTerm
                     new SendEvent { Text = "AT+CFUN=1,1" },
 
                 };
-
             }
-
         }
 
         public void OnExit()
@@ -224,7 +233,17 @@ namespace AtTerm
 
         public void OnContinuation()
         {
-            TTy?.Send(CommandText);
+            var last = Log.OfType<SendEvent>().LastOrDefault();
+            if (!(last?.Raw).GetValueOrDefault(false))
+                last = new SendEvent { Raw = true };
+
+            var command = HasCommand ? CommandText : CRLF;
+            last.Text += command;
+
+            Log.Remove(last);
+            Log.Add(last);
+
+            TTy.Send(command);
             CommandText = String.Empty;
         }
 
@@ -237,8 +256,10 @@ namespace AtTerm
         public const string CRLF = "\r\n";
         public void Send(string command)
         {
+            if (!TTy.IsConnected)
+                return;
             Write(new SendEvent { Text = command });
-            TTy?.Send(command + CRLF);
+            TTy.Send(command.EndsWith(CRLF) ? command : command + CRLF);
         }
 
         #endregion
@@ -293,13 +314,13 @@ namespace AtTerm
         #endregion
 
         #region Log 
-        
+
         public void Write(TextEvent sendEvent)
         {
             DispatcherInvoke(() => Log.Add(sendEvent));
         }
 
-        
+
 
         #endregion
 

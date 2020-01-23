@@ -35,6 +35,18 @@ namespace AtTerm
         }
 
         public override string ToString() => Command;
+
+        public static string Qualify(string commandText)
+        {
+            return String.IsNullOrWhiteSpace(commandText) ? "AT" :
+                commandText.StartsWith(">") ? commandText.Substring(1) :
+                    $"AT+{commandText}";
+        }
+
+        public static string Unqualify(string commandText)
+        {
+            return commandText.StartsWith("AT+") ? commandText.Substring(3) : ">" + commandText;
+        }
     }
 
 }

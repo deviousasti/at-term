@@ -31,17 +31,15 @@
         <EventTrigger RoutedEvent="Selector.SelectionChanged" SourceName="CommandInput">
             <BeginStoryboard x:Name="CommandBeat_BeginStoryboard" Storyboard="{StaticResource CommandBeat}"/>
         </EventTrigger>
-        <EventTrigger RoutedEvent="UIElement.TextInput" SourceName="CommandInput"/>
     </Window.Triggers>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="30"/>
             <RowDefinition/>
-            <RowDefinition Height="30" MinHeight="30" MaxHeight="90"/>
+            <RowDefinition Height="30" MinHeight="30" MaxHeight="200"/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
 
-        <ListView ItemsSource="{Binding Log}" Grid.Row="1" Background="{x:Null}" FontFamily="Consolas" ScrollViewer.VerticalScrollBarVisibility="Visible" BorderThickness="0" Margin="0,0,0,5" ScrollViewer.ScrollChanged="OnListViewScroll">
         <StackPanel Orientation="Horizontal" DataContext="{Binding TTy}">
             <ToggleButton x:Name="ConnectButton" Width="120" HorizontalContentAlignment="Left" IsChecked="{Binding IsConnected, Mode=TwoWay}" Background="White" BorderThickness="0">
                 <StackPanel Orientation="Horizontal">
@@ -73,14 +71,22 @@
             <ToggleButton IsChecked="{Binding DtrEnabled}" Content="DTR" Margin="10,0,0,0" />
             <ToggleButton IsChecked="{Binding RtsEnabled}" Content="RTS" />
         </StackPanel>
+
+        <ListView ItemsSource="{Binding Log}" Grid.Row="1" Background="{x:Null}" FontFamily="Consolas" 
+                  ScrollViewer.VerticalScrollBarVisibility="Visible" 
+                  ScrollViewer.ScrollChanged="OnListViewScroll"
+                  SelectedItem="{Binding SelectedLog}"
+                  MouseDoubleClick="OnListViewDoubleClick"
+                  KeyUp="OnListViewKeyUp"                  
+                  BorderThickness="0" Margin="0,0,0,5" >
             <ListView.Resources>
                 <DataTemplate DataType="{x:Type local:SendEvent}">
                     <Grid d:DesignWidth="114.75">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{DynamicResource LeftMargin}"></ColumnDefinition>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="{DynamicResource LeftMargin}"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock FontFamily="{StaticResource IconFont}" Foreground="{StaticResource SentFg}" VerticalAlignment="Center" FontSize="16" Margin="4,0,0,0">chevron_right</TextBlock>
+                        <TextBlock FontFamily="{StaticResource IconFont}" Foreground="{StaticResource SentFg}" VerticalAlignment="Center" FontSize="16" Margin="4,0,0,0"><Run Text="chevron_right"/></TextBlock>
                         <TextBlock Text="{Binding Text}"  Foreground="{StaticResource SentFg}" Grid.Column="1" Padding="4" />
                     </Grid>
                 </DataTemplate>
@@ -88,10 +94,10 @@
                 <DataTemplate DataType="{x:Type local:ReceiveEvent}">
                     <Grid Margin="4" d:DesignWidth="114.75">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{DynamicResource LeftMargin}"></ColumnDefinition>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="{DynamicResource LeftMargin}"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock FontFamily="{StaticResource IconFont}" Foreground="{DynamicResource RecvFg}" VerticalAlignment="Center" FontSize="16">chevron_left</TextBlock>
+                        <TextBlock FontFamily="{StaticResource IconFont}" Foreground="{DynamicResource RecvFg}" VerticalAlignment="Center" FontSize="16"><Run Text="chevron_left"/></TextBlock>
                         <TextBlock Text="{Binding Text}" Grid.Column="1" />
                     </Grid>
                 </DataTemplate>
@@ -99,10 +105,10 @@
                 <DataTemplate DataType="{x:Type local:ConnectionEvent}">
                     <Grid Margin="4" d:DesignWidth="114.75">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{DynamicResource LeftMargin}"></ColumnDefinition>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="{DynamicResource LeftMargin}"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock FontFamily="{StaticResource IconFont}" Foreground="{DynamicResource ConnectFg}" VerticalAlignment="Center" FontSize="16">link</TextBlock>
+                        <TextBlock FontFamily="{StaticResource IconFont}" Foreground="{DynamicResource ConnectFg}" VerticalAlignment="Center" FontSize="16"><Run Text="link"/></TextBlock>
                         <TextBlock Text="{Binding Text}" Foreground="{StaticResource ConnectFg}" Grid.Column="1" />
                     </Grid>
                 </DataTemplate>
@@ -110,8 +116,8 @@
                 <DataTemplate DataType="{x:Type local:DisconnectionEvent}">
                     <Grid Margin="4" d:DesignWidth="114.75">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{DynamicResource LeftMargin}"></ColumnDefinition>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="{DynamicResource LeftMargin}"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock FontFamily="{StaticResource IconFont}" Foreground="{DynamicResource DisconnectFg}" VerticalAlignment="Center" FontSize="16">link_off</TextBlock>
                         <TextBlock Text="{Binding Text}" Foreground="{StaticResource DisconnectFg}" Grid.Column="1" />
@@ -131,7 +137,7 @@
                 <ColumnDefinition Width="50"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="heart_button" Command="{Binding AddFavouritesCommand}" Content="favorite" Background="Transparent" FontFamily="{StaticResource IconFont}"  FontSize="18"  Foreground="Red" BorderThickness="0" ToolTip="Add to favourites" />
+            <Button x:Name="heart_button" Command="{Binding AddFavouritesCommand}" Content="favorite" FontFamily="{StaticResource IconFont}"  FontSize="18"  Foreground="Red" ToolTip="Add to favourites" />
             <ScrollViewer  Grid.Column="1" VerticalScrollBarVisibility="Hidden">
                 <ItemsControl ItemsSource="{Binding Favourites}">
                     <ItemsControl.ItemsPanel>
@@ -163,9 +169,7 @@
 
             <controls:DropDownButton Content="AT+" BorderThickness="0" Background="{DynamicResource ThemeBg}" Foreground="#FF001EA4" FontSize="{StaticResource LargeFontSize}" ToolTip="Mode">
                 <controls:DropDownButton.DropDown>
-                    <ContextMenu FontSize="{StaticResource LargeFontSize}" ItemsSource="{Binding AvailableModes}">
-
-                    </ContextMenu>
+                    <ContextMenu FontSize="{StaticResource LargeFontSize}" ItemsSource="{Binding AvailableModes}"/>
                 </controls:DropDownButton.DropDown>
             </controls:DropDownButton>
 
@@ -178,15 +182,16 @@
                 DisplayMemberPath="Command"
                 Text="{Binding CommandText, Mode=TwoWay}"
                 IsTextSearchEnabled="False" Grid.Column="1"  
-                PreviewKeyDown="OnSubmit"
+                PreviewKeyUp="OnSubmit"
             />
 
             <Button x:Name="button" Grid.Column="2" 
                     Command="{Binding SendCommand}" 
                     Content="send" ToolTip="Send"
-                    Background="Transparent" 
-                    FontFamily="{StaticResource IconFont}"  FontSize="18"  Foreground="Black" BorderThickness="0"  />
+                    FontFamily="{StaticResource IconFont}"  FontSize="18"  
+                    Foreground="Black" />
         </Grid>
+
 
         <!--#region Typing Bar -->
         <!--#endregion-->

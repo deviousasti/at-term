@@ -21,10 +21,10 @@ namespace AtTerm
         public event Action<string> Disconnected;
 
         public string[] PortNameSuggestions => SerialPort.GetPortNames();
-        
+
         private string _portName = "COM1";
-        public string PortName 
-        { 
+        public string PortName
+        {
             get => _portName;
             set
             {
@@ -45,6 +45,7 @@ namespace AtTerm
         }
 
         private string _portSettings = "8N1";
+
         public string PortSettings
         {
             get => _portSettings;
@@ -61,9 +62,47 @@ namespace AtTerm
             set => int.TryParse(value, out _portBaud);
         }
 
+        private bool dtrEnabled;
+        public bool DtrEnabled
+        {
+            get => dtrEnabled;
+            set
+            {
+                dtrEnabled = value;
+                try
+                {
+                    Port.DtrEnable = value;
+                }
+                catch (Exception ex)
+                {
+                    Trace.TraceError(ex.Message);
+                }
+
+            }
+        }
+
+        private bool _rtsEnabled;
+        public bool RtsEnabled
+        {
+            get => _rtsEnabled;
+            set
+            {
+                _rtsEnabled = value;
+                try
+                {
+                    Port.RtsEnable = value;
+                }
+                catch (Exception ex)
+                {
+                    Trace.TraceError(ex.Message);
+                }
+
+            }
+        }
+
         public bool IsStarted { get; set; }
 
-        public string[] PortBaudSuggestions => 
+        public string[] PortBaudSuggestions =>
             "1200,1800,2400,3600,4800,9600,14400,19200,28800,33600,38400,56000,57600,76800,115200,128000,153600,230400,460800,921600,1000000,1500000,2000000".Split(',');
 
         public bool Connect()
@@ -73,19 +112,49 @@ namespace AtTerm
 
             try
             {
-                var instance = new SerialPort(PortName, PortBaud);
+                var instance = new SerialPort(PortName, PortBaud) { DtrEnable = DtrEnabled, RtsEnable = RtsEnabled };
                 instance.Open();
                 Port = instance;
+                Port.PinChanged += OnPinChanged;
                 Port.DataReceived += OnDataReceived;
                 Connected?.Invoke($"Connected to {PortName}");
+                OnPropertyChanged(nameof(IsConnected));
                 IsStarted = true;
             }
             catch (Exception ex)
             {
                 Disconnected?.Invoke($"Could not connect to {PortName}: {ex.Message}");
-            }            
+            }
 
             return IsConnected;
+        }
+
+        public bool Disconnect()
+        {
+            try
+            {
+                Port?.Close();
+                Port?.Dispose();
+                Port = null;
+
+                Disconnected?.Invoke($"Disconnected from {PortName}");
+                IsStarted = false;
+                OnPropertyChanged(nameof(IsConnected));
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceError(ex.Message);
+            }
+
+            return false;
+
+        }
+
+
+        protected void OnPinChanged(object sender, SerialPinChangedEventArgs e)
+        {
+
         }
 
         protected void OnDataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -98,7 +167,7 @@ namespace AtTerm
             {
                 Trace.TraceError(ex.Message);
             }
-            
+
         }
 
         public bool IsConnected
@@ -115,40 +184,25 @@ namespace AtTerm
                 }
                 return false;
             }
+            set
+            {
+                if (!value)
+                    Disconnect();
+                else
+                    Connect();
+            }
         }
 
-
-        public bool Disconnect()
-        {
-            try
-            {
-                Port?.Close();
-                Port?.Dispose();
-                Port = null;
-
-                Disconnected?.Invoke($"Disconnected from {PortName}");
-                IsStarted = false;
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Trace.TraceError(ex.Message);
-            }
-
-            return false;
-            
-        }
 
         public void Send(string text)
         {
             try
             {
-                Port?.Write(text);
+                Port.Write(text);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                Disconnected?.Invoke("Failed: " + ex.Message);
             }
         }
 
@@ -157,6 +211,7 @@ namespace AtTerm
             base.RaisePropertyChanged(propertyName);
             if (!IsStarted)
                 return;
+
             Disconnect();
             Connect();
         }
