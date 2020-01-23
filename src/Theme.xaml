@@ -52,7 +52,7 @@
         <Setter Property="Template" Value="{StaticResource Button}" />
     </Style>
 
-    <Style TargetType="ToggleButton">
+    <Style x:Key="ToggleButtonBase" TargetType="ToggleButton">
         <Setter Property="BorderBrush" Value="#FFD6D6D6" />
         <Setter Property="Background" Value="White" />
         <Setter Property="VerticalAlignment" Value="Center" />
@@ -60,7 +60,9 @@
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Focusable" Value="False" />
         <Setter Property="Template" Value="{StaticResource Button}" />
+    </Style>
 
+    <Style TargetType="ToggleButton" BasedOn="{StaticResource ToggleButtonBase}">        
     </Style>
 
 </ResourceDictionary>
