@@ -6,7 +6,10 @@
         xmlns:local="clr-namespace:AtTerm" xmlns:controls="clr-namespace:System.Windows.Controls"
         xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="AtTerm.MainWindow"
         mc:Ignorable="d"
-        Title="AT Term" Height="450" Width="800" FontFamily="{StaticResource AppFont}" Background="{DynamicResource ThemeBg}" d:DataContext="{d:DesignInstance {x:Type local:TermViewModel}}">
+        Title="AT Term" Height="450" Width="800" FontFamily="{StaticResource AppFont}" 
+    Background="{DynamicResource ThemeBg}" d:DataContext="{d:DesignInstance {x:Type local:TermViewModel}}"
+    PreviewKeyUp="OnWindowShortcut"
+    >
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <Storyboard x:Key="Heartbeat">
@@ -40,39 +43,74 @@
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal" DataContext="{Binding TTy}">
-            <ToggleButton x:Name="ConnectButton" Width="120" HorizontalContentAlignment="Left" IsChecked="{Binding IsConnected, Mode=TwoWay}" Background="White" BorderThickness="0">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Width="18" FontFamily="{StaticResource IconFont}" FontSize="17" VerticalAlignment="Center" Margin="4" Text="{Binding Tag, ElementName=ConnectButton}"/> 
-                    <TextBlock VerticalAlignment="Center" Text="{Binding ToolTip, ElementName=ConnectButton}"/>
-                </StackPanel>
-                <ToggleButton.Style>
-                    <Style TargetType="ToggleButton">
-                        <Setter Property="Template" Value="{StaticResource Button}" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsConnected}" Value="True">
-                                <Setter Property="Foreground" Value="#FF58B225" />
-                                <Setter Property="ToolTip" Value="Connected" />
-                                <Setter Property="Tag" Value="power" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding IsConnected}" Value="False">
-                                <Setter Property="Foreground" Value="Red" />
-                                <Setter Property="ToolTip" Value="Disconnected" />
-                                <Setter Property="Tag" Value="power_off" />
-                                <Setter Property="Background" Value="Blue" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </ToggleButton.Style>
-            </ToggleButton>
-            <ComboBox Width="100" ToolTip="Port" Text="{Binding PortName}" ItemsSource="{Binding PortNameSuggestions}" IsEditable="True" />
-            <ComboBox Width="100" ToolTip="Baud Rate" Text="{Binding PortBaud}" ItemsSource="{Binding PortBaudSuggestions}" IsEditable="True" />
-            <TextBox Width="50" ToolTip="Port Settings" Text="{Binding PortSettings}" VerticalContentAlignment="Center" BorderThickness="0"/>
-            <ToggleButton IsChecked="{Binding DtrEnabled}" Content="DTR" Margin="10,0,0,0" />
-            <ToggleButton IsChecked="{Binding RtsEnabled}" Content="RTS" />
-        </StackPanel>
+        <Grid Margin="10,0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" DataContext="{Binding TTy}">
+                <ToggleButton x:Name="ConnectButton" Width="120" HorizontalContentAlignment="Left" IsChecked="{Binding IsConnected, Mode=TwoWay}" Background="White" BorderThickness="0">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Width="18" FontFamily="{StaticResource IconFont}" FontSize="17" VerticalAlignment="Center" Margin="4" Text="{Binding Tag, ElementName=ConnectButton}"/>
+                        <TextBlock VerticalAlignment="Center" Text="{Binding ToolTip, ElementName=ConnectButton}"/>
+                    </StackPanel>
+                    <ToggleButton.Style>
+                        <Style TargetType="ToggleButton">
+                            <Setter Property="Template" Value="{StaticResource Button}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                    <Setter Property="Foreground" Value="#FF58B225" />
+                                    <Setter Property="ToolTip" Value="Connected" />
+                                    <Setter Property="Tag" Value="power" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsConnected}" Value="False">
+                                    <Setter Property="Foreground" Value="Red" />
+                                    <Setter Property="ToolTip" Value="Disconnected" />
+                                    <Setter Property="Tag" Value="power_off" />
+                                    <Setter Property="Background" Value="Blue" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ToggleButton.Style>
+                </ToggleButton>
+                <ComboBox Width="100" ToolTip="Port" Text="{Binding PortName}" ItemsSource="{Binding PortNameSuggestions}" IsEditable="True" />
+                <ComboBox Width="100" ToolTip="Baud Rate" Text="{Binding PortBaud}" ItemsSource="{Binding PortBaudSuggestions}" IsEditable="True" />
+                <TextBox Width="50" ToolTip="Port Settings" Text="{Binding PortSettings}" VerticalContentAlignment="Center" BorderThickness="0"/>
+                <ToggleButton IsChecked="{Binding DtrEnabled}" Content="DTR" Margin="10,0,0,0" />
+                <ToggleButton IsChecked="{Binding RtsEnabled}" Content="RTS" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <ToggleButton x:Name="LogButton" Command="{Binding LogCommand}" IsChecked="{Binding IsLogging, Mode=TwoWay}" BorderThickness="0" Background="White" Padding="4">
+                    <TextBlock>
+                        <Run BaselineAlignment="Center" FontSize="16" FontFamily="{StaticResource IconFont}">book</Run>
+                        <Run>Log</Run>
+                    </TextBlock>
+                    <ToggleButton.Style>
+                        <Style TargetType="ToggleButton">
+                            <Setter Property="Template" Value="{StaticResource Button}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsLogging}" Value="True">
+                                    <Setter Property="Foreground" Value="Green" />
+                                    <Setter Property="ToolTip" Value="Currently logging to file" />
+                                    <Setter Property="Tag" Value="power" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsLogging}" Value="False">
+                                    <Setter Property="Foreground" Value="Gray" />
+                                    <Setter Property="ToolTip" Value="Click to start logging" />
+                                    <Setter Property="Tag" Value="power_off" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ToggleButton.Style>
+                </ToggleButton>
 
-        <ListView ItemsSource="{Binding Log}" Grid.Row="1" Background="{x:Null}" FontFamily="Consolas" 
+                <Button x:Name="ClearButton" Command="{Binding ClearCommand}">
+                    <TextBlock>
+                        <Run BaselineAlignment="Center" FontSize="16" FontFamily="{StaticResource IconFont}">delete</Run>
+                        <Run>Clear</Run>
+                    </TextBlock>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <ListView x:Name="LogView"
+                  ItemsSource="{Binding Log}" Grid.Row="1" Background="{x:Null}" FontFamily="Consolas" 
                   ScrollViewer.VerticalScrollBarVisibility="Visible" 
                   ScrollViewer.ScrollChanged="OnListViewScroll"
                   SelectedItem="{Binding SelectedLog}"
@@ -182,6 +220,7 @@
                 DisplayMemberPath="Command"
                 Text="{Binding CommandText, Mode=TwoWay}"
                 IsTextSearchEnabled="False" Grid.Column="1"  
+                PreviewKeyDown="OnInputKeyDown"
                 PreviewKeyUp="OnSubmit"
             />
 

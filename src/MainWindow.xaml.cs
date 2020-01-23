@@ -83,16 +83,9 @@ namespace AtTerm
                 ViewModel.SendLast();
             }
 
-            if (e.Key == Key.Tab && !hasCtrl)
-            {
-                ViewModel.AutoCompleteText();
-                CommandInput.SetCaretPosition(int.MaxValue);
-                e.Handled = true;
-            }
-
             if (e.Key == Key.Up && !CommandInput.IsDropDownOpen && !hasCtrl)
             {
-                ViewModel.CycleHistory();                
+                ViewModel.CycleHistory();
                 CommandInput.SetCaretPosition(int.MaxValue);
             }
 
@@ -102,18 +95,35 @@ namespace AtTerm
             }
         }
 
+        private void OnInputKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Tab)
+            {
+                ViewModel.AutoCompleteText();
+                CommandInput.SetCaretPosition(int.MaxValue);
+                e.Handled = true;
+            }
+        }
+
         private void OnListViewKeyUp(object sender, KeyEventArgs e)
         {
+            var listview = e.Source as ListView;
+
             if (e.Key == Key.Enter)
             {
                 ViewModel.Send();
+            }
+
+            if (e.Key == Key.Escape)
+            {
+                listview.SelectedIndex = -1;
+                CommandInput.Focus();
             }
 
             if (e.KeyboardDevice.Modifiers.HasFlag(ModifierKeys.Control))
             {
                 if (e.Key == Key.C)
                 {
-                    var listview = e.Source as ListView;
                     var text = String.Join("\r\n", listview.SelectedItems.Cast<Object>());
                     Clipboard.SetText(text);
                 }
@@ -130,6 +140,32 @@ namespace AtTerm
                 //}
             }
 
+        }
+
+        private void OnWindowShortcut(object sender, KeyEventArgs e)
+        {
+            var hasCtrl = e.KeyboardDevice.Modifiers.HasFlag(ModifierKeys.Control);
+
+            if (hasCtrl && e.Key == Key.S)
+            {
+                ViewModel.IsLogging = !ViewModel.IsLogging;
+                ViewModel.LogCommand.Execute(null);
+            }
+
+            if (hasCtrl && e.Key == Key.L)
+            {
+                ViewModel.ClearCommand.Execute(null);
+            }
+
+            if(hasCtrl && (e.Key == Key.OemMinus || e.Key == Key.Subtract))
+            {
+                LogView.FontSize--;
+            }
+
+            if (hasCtrl && (e.Key == Key.OemPlus || e.Key == Key.Add))
+            {
+                LogView.FontSize++;
+            }
         }
     }
 }

@@ -19,6 +19,8 @@ namespace AtTerm
 
     public abstract class TextEvent
     {
+        public abstract string Type { get; }
+
         public string Text { get; set; } = String.Empty;
 
         public override string ToString()
@@ -29,14 +31,24 @@ namespace AtTerm
 
     public class SendEvent : TextEvent
     {
+        public override string Type => "Sent";
         public bool Raw { get; set; }
     }
 
-    public class ReceiveEvent : TextEvent { }
+    public class ReceiveEvent : TextEvent
+    {
+        public override string Type => "Received";
+    }
 
-    public class ConnectionEvent : TextEvent { }
+    public class ConnectionEvent : TextEvent
+    {
+        public override string Type => "Connected";
+    }
 
-    public class DisconnectionEvent : TextEvent { }
+    public class DisconnectionEvent : TextEvent
+    {
+        public override string Type => "Disconnected";
+    }
 
     public partial class TermViewModel : ViewModelBase
     {
@@ -65,7 +77,7 @@ namespace AtTerm
             Send();
         }
 
-        public string QualifiedCommmandText => AtCommand.Qualify(CommandText);            
+        public string QualifiedCommmandText => AtCommand.Qualify(CommandText);
 
 
         private AtCommand _selectedCommand;
@@ -116,6 +128,20 @@ namespace AtTerm
             }
         }
 
+        public RelayCommand ClearCommand { get; }
+
+        public RelayCommand LogCommand { get; }
+
+        private bool _isLogging;
+
+        public bool IsLogging
+        {
+            get => _isLogging;
+            set { _isLogging = value; OnPropertyChanged(); }
+        }
+
+        public string LogFileName { get; set; }
+
         #endregion
 
         public TermViewModel(ITTy tty)
@@ -125,11 +151,16 @@ namespace AtTerm
             tty.Connected += text => Write(new ConnectionEvent { Text = text });
             tty.Disconnected += text => Write(new DisconnectionEvent { Text = text });
 
-            AddFavouritesCommand =
-                new RelayCommand(() => AddToFavourites(QualifiedCommmandText), () => true);
+            AddFavouritesCommand = new RelayCommand(() => AddToFavourites(QualifiedCommmandText), () => true);
 
-            SendCommand =
-                new RelayCommand(() => Send(), () => true);
+            SendCommand = new RelayCommand(() => Send(), () => true);
+
+            ClearCommand = new RelayCommand(() => Log.Clear(), () => true);
+
+            LogCommand = new RelayCommand(() => 
+                LogFileName = $"{DateTime.Now.ToString("dd-MM-yyyy--HH-mm-ss")}.tsv", 
+                () => true
+            );
 
             if (InDesignMode)
             {
@@ -315,9 +346,23 @@ namespace AtTerm
 
         #region Log 
 
-        public void Write(TextEvent sendEvent)
+        public void Write(TextEvent evt)
         {
-            DispatcherInvoke(() => Log.Add(sendEvent));
+            DispatcherInvoke(() =>
+            {
+                if(Log.Count > 100000)
+                {
+                    Log.RemoveAt(0);
+                }
+
+                Log.Add(evt);
+            });
+
+            if (IsLogging && !String.IsNullOrEmpty(LogFileName))
+            {
+                var lines = evt.Text.Split('\n').Select(s => $"{DateTime.Now}\t{evt.Type}\t{s.Trim()}");
+                File.AppendAllLines(LogFileName, lines);
+            }
         }
 
 
