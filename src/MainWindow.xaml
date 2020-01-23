@@ -42,6 +42,37 @@
         </Grid.RowDefinitions>
 
         <ListView ItemsSource="{Binding Log}" Grid.Row="1" Background="{x:Null}" FontFamily="Consolas" ScrollViewer.VerticalScrollBarVisibility="Visible" BorderThickness="0" Margin="0,0,0,5" ScrollViewer.ScrollChanged="OnListViewScroll">
+        <StackPanel Orientation="Horizontal" DataContext="{Binding TTy}">
+            <ToggleButton x:Name="ConnectButton" Width="120" HorizontalContentAlignment="Left" IsChecked="{Binding IsConnected, Mode=TwoWay}" Background="White" BorderThickness="0">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Width="18" FontFamily="{StaticResource IconFont}" FontSize="17" VerticalAlignment="Center" Margin="4" Text="{Binding Tag, ElementName=ConnectButton}"/> 
+                    <TextBlock VerticalAlignment="Center" Text="{Binding ToolTip, ElementName=ConnectButton}"/>
+                </StackPanel>
+                <ToggleButton.Style>
+                    <Style TargetType="ToggleButton">
+                        <Setter Property="Template" Value="{StaticResource Button}" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                <Setter Property="Foreground" Value="#FF58B225" />
+                                <Setter Property="ToolTip" Value="Connected" />
+                                <Setter Property="Tag" Value="power" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsConnected}" Value="False">
+                                <Setter Property="Foreground" Value="Red" />
+                                <Setter Property="ToolTip" Value="Disconnected" />
+                                <Setter Property="Tag" Value="power_off" />
+                                <Setter Property="Background" Value="Blue" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ToggleButton.Style>
+            </ToggleButton>
+            <ComboBox Width="100" ToolTip="Port" Text="{Binding PortName}" ItemsSource="{Binding PortNameSuggestions}" IsEditable="True" />
+            <ComboBox Width="100" ToolTip="Baud Rate" Text="{Binding PortBaud}" ItemsSource="{Binding PortBaudSuggestions}" IsEditable="True" />
+            <TextBox Width="50" ToolTip="Port Settings" Text="{Binding PortSettings}" VerticalContentAlignment="Center" BorderThickness="0"/>
+            <ToggleButton IsChecked="{Binding DtrEnabled}" Content="DTR" Margin="10,0,0,0" />
+            <ToggleButton IsChecked="{Binding RtsEnabled}" Content="RTS" />
+        </StackPanel>
             <ListView.Resources>
                 <DataTemplate DataType="{x:Type local:SendEvent}">
                     <Grid d:DesignWidth="114.75">
