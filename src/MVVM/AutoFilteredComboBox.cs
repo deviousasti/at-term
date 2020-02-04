@@ -141,14 +141,20 @@ namespace System.Windows.Controls
             {
                 if (e.OriginalSource is TextBox)
                 {
-                    // Avoid the automatic selection of the first letter (As next letter will cause overwrite)
-                    TextBox textBox = e.OriginalSource as TextBox;
-                    if (textBox.Text.Length == 1 && textBox.SelectionLength == 1)
-                    {
-                        textBox.SelectionLength = 0;
-                        textBox.SelectionStart = 1;
-                    }
+                    //TextBox textBox = e.OriginalSource as TextBox;                    
+                    //We handle this in OnDropDownOpened
+                    //The key based event is too slow
                 }
+            }
+        }
+
+        protected override void OnDropDownOpened(EventArgs e)
+        {
+            // Avoid the automatic selection of the first letter (As next letter will cause overwrite)
+            var textBox = Keyboard.FocusedElement as TextBox;
+            if (textBox != null && textBox.Text.Length == 1 && textBox.SelectionLength == 1)
+            {
+                textBox.Select(1, textBox.SelectionLength);
             }
         }
 
