@@ -33,6 +33,12 @@ namespace AtTerm
             ViewModel.OnExit();
         }
 
+        protected override void OnActivated(EventArgs e)
+        {
+            base.OnActivated(e);
+            CommandInput.Focus();
+        }
+
 
         public TermViewModel ViewModel => this.DataContext as TermViewModel;
 
