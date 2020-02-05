@@ -156,6 +156,11 @@ namespace System.Windows.Controls
             {
                 textBox.Select(1, textBox.SelectionLength);
             }
+
+            if (textBox.SelectionLength == textBox.Text.Length)
+            {
+                CursorToEnd();
+            }
         }
 
         #region Handle filtering
@@ -215,6 +220,7 @@ namespace System.Windows.Controls
             {
                 _ignoreTextChanged = true;  // Ignore the following TextChanged
                 base.OnSelectionChanged(e);
+                CursorToEnd(false);
             }
             finally
             {
@@ -260,6 +266,14 @@ namespace System.Windows.Controls
             {
                 this.RefreshFilter();
             }
+        }
+
+
+        public void CursorToEnd(bool closeDropDown = true)
+        {
+            EditableTextBox.Select(this.EditableTextBox.Text.Length, 0);
+            if (closeDropDown)
+                IsDropDownOpen = false;
         }
 
         public void SetCaretPosition(int position, int length = 0)
