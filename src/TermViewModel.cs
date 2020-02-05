@@ -157,10 +157,12 @@ namespace AtTerm
 
             ClearCommand = new RelayCommand(() => Log.Clear(), () => true);
 
-            LogCommand = new RelayCommand(() => 
-                LogFileName = $"{DateTime.Now.ToString("dd-MM-yyyy--HH-mm-ss")}.tsv", 
+            LogCommand = new RelayCommand(() =>
+                LogFileName = $"{DateTime.Now.ToString("dd-MM-yyyy--HH-mm-ss")}.tsv",
                 () => true
             );
+
+            ResetHistoryCycle();
 
             if (InDesignMode)
             {
@@ -207,17 +209,26 @@ namespace AtTerm
 
         private int HistoryIndex { get; set; }
 
-        public void CycleHistory()
+        public void CycleHistory(bool direction)
         {
-            if (SelectedCommand == null && History.Count > 0)
+            if (History.Count > 0)
             {
-                HistoryIndex = (HistoryIndex + 1) % History.Count;
-                CommandText = History[HistoryIndex];
+                HistoryIndex = HistoryIndex + (direction ? 1 : -1);
+                var max = History.Count - 1;
+                HistoryIndex = HistoryIndex < 0 ? max :
+                               HistoryIndex > max ? 0 :
+                               HistoryIndex;
+                CommandText = History[Math.Abs(HistoryIndex)];
             }
         }
 
+        public void ResetHistoryCycle() => HistoryIndex = -1;
+
         public void AddToHistory(string commandText)
         {
+            if (String.IsNullOrWhiteSpace(commandText))
+                return;
+
             History.Remove(commandText);
             History.Insert(0, commandText);
             HistoryIndex = History.Count - 1;
@@ -350,7 +361,7 @@ namespace AtTerm
         {
             DispatcherInvoke(() =>
             {
-                if(Log.Count > 100000)
+                if (Log.Count > 100000)
                 {
                     Log.RemoveAt(0);
                 }

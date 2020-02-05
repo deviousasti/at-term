@@ -23,7 +23,8 @@ namespace AtTerm
         public MainWindow(TermViewModel viewModel)
         {
             InitializeComponent();
-            this.DataContext = viewModel;
+            DataContext = viewModel;
+            Loaded += (s, e) => FocusManager.SetFocusedElement(this, CommandInput);
         }
 
 
@@ -36,9 +37,8 @@ namespace AtTerm
         protected override void OnActivated(EventArgs e)
         {
             base.OnActivated(e);
-            CommandInput.Focus();
-        }
 
+        }
 
         public TermViewModel ViewModel => this.DataContext as TermViewModel;
 
@@ -72,7 +72,7 @@ namespace AtTerm
             ViewModel.Send();
         }
 
-        private void OnSubmit(object sender, KeyEventArgs e)
+        private void OnInputKeyUp(object sender, KeyEventArgs e)
         {
             var hasCtrl = e.KeyboardDevice.Modifiers.HasFlag(ModifierKeys.Control);
 
@@ -82,6 +82,8 @@ namespace AtTerm
                     ViewModel.OnContinuation();
                 else
                     ViewModel.OnSubmit();
+
+                ViewModel.ResetHistoryCycle();
             }
 
             if (hasCtrl && e.Key == Key.R)
@@ -89,24 +91,27 @@ namespace AtTerm
                 ViewModel.SendLast();
             }
 
-            if (e.Key == Key.Up && !CommandInput.IsDropDownOpen && !hasCtrl)
-            {
-                ViewModel.CycleHistory();
-                CommandInput.SetCaretPosition(int.MaxValue);
-            }
-
             if (e.Key == Key.Escape)
             {
                 ViewModel.ClearText();
             }
+
+            if (!CommandInput.IsDropDownOpen && !hasCtrl && (e.Key == Key.Up || e.Key == Key.Down))
+            {
+                ViewModel.CycleHistory(e.Key == Key.Up);
+                CommandInput.CursorToEnd();
+            }
+
         }
 
         private void OnInputKeyDown(object sender, KeyEventArgs e)
         {
+            var hasCtrl = e.KeyboardDevice.Modifiers.HasFlag(ModifierKeys.Control);
+
             if (e.Key == Key.Tab)
             {
                 ViewModel.AutoCompleteText();
-                CommandInput.SetCaretPosition(int.MaxValue);
+                CommandInput.CursorToEnd();
                 e.Handled = true;
             }
         }
@@ -163,7 +168,7 @@ namespace AtTerm
                 ViewModel.ClearCommand.Execute(null);
             }
 
-            if(hasCtrl && (e.Key == Key.OemMinus || e.Key == Key.Subtract))
+            if (hasCtrl && (e.Key == Key.OemMinus || e.Key == Key.Subtract))
             {
                 LogView.FontSize--;
             }

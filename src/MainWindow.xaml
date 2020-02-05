@@ -221,7 +221,7 @@
                 Text="{Binding CommandText, Mode=TwoWay}"
                 IsTextSearchEnabled="False" Grid.Column="1"  
                 PreviewKeyDown="OnInputKeyDown"
-                PreviewKeyUp="OnSubmit"
+                PreviewKeyUp="OnInputKeyUp"
             />
 
             <Button x:Name="button" Grid.Column="2" 
