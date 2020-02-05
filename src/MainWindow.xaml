@@ -120,14 +120,28 @@
                   BorderThickness="0" Margin="0,0,0,5" >
             <ListView.Resources>
                 <DataTemplate DataType="{x:Type local:SendEvent}">
-                    <Grid d:DesignWidth="114.75">
+                    <DataTemplate.Resources>
+                        <Storyboard x:Key="OnSendFlash">
+                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)" Storyboard.TargetName="bggrid">
+                                <EasingColorKeyFrame KeyTime="0" Value="#FFCEE484"/>
+                                <EasingColorKeyFrame KeyTime="0:0:0.25" Value="#FFF">                                    
+                                </EasingColorKeyFrame>
+                            </ColorAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </DataTemplate.Resources>
+                    <Grid x:Name="bggrid" d:DesignWidth="114.75" Background="Transparent">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="{DynamicResource LeftMargin}"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock FontFamily="{StaticResource IconFont}" Foreground="{StaticResource SentFg}" VerticalAlignment="Center" FontSize="16" Margin="4,0,0,0"><Run Text="chevron_right"/></TextBlock>
-                        <TextBlock Text="{Binding Text}"  Foreground="{StaticResource SentFg}" Grid.Column="1" Padding="4" />
+                        <TextBlock Text="{Binding Text}" Foreground="{StaticResource SentFg}" Grid.Column="1" Padding="4" />
                     </Grid>
+                    <DataTemplate.Triggers>
+                        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                            <BeginStoryboard x:Name="OnSendFlash_BeginStoryboard" Storyboard="{StaticResource OnSendFlash}"/>
+                        </EventTrigger>
+                    </DataTemplate.Triggers>
                 </DataTemplate>
 
                 <DataTemplate DataType="{x:Type local:ReceiveEvent}">
@@ -163,9 +177,9 @@
                     </Grid>
                 </DataTemplate>
 
-                <!--<Style TargetType="ListViewItem">
+                <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                </Style>-->
+                </Style>
             </ListView.Resources>
         </ListView>
 

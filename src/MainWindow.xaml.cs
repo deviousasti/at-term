@@ -62,8 +62,11 @@ namespace AtTerm
             {
                 if (e.Source is ListView listView)
                 {
-                    if (listView.Items.Count > 0)
-                        listView.ScrollIntoView(listView.Items.GetItemAt(listView.Items.Count - 1));
+                    if (listView.Items.Count == 0)
+                        return;
+
+                    var lastItem = listView.Items.GetItemAt(listView.Items.Count - 1);
+                    listView.ScrollIntoView(lastItem);
                 }
             }
         }

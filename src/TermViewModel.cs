@@ -159,7 +159,7 @@ namespace AtTerm
             ClearCommand = new RelayCommand(() => Log.Clear(), () => true);
 
             LogCommand = new RelayCommand(() =>
-                LogFileName = $"{DateTime.Now.ToString("dd-MM-yyyy--HH-mm-ss")}.tsv",
+                LogFileName = $"{DateTime.Now:dd-MM-yyyy--HH-mm-ss}.tsv",
                 () => true
             );
 
