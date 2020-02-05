@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:AtTerm" xmlns:controls="clr-namespace:System.Windows.Controls"
         xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="AtTerm.MainWindow"
         mc:Ignorable="d"
-        Title="AT Term" Height="450" Width="800" FontFamily="{StaticResource AppFont}" 
+        Title="{Binding Title}" Height="450" Width="800" FontFamily="{StaticResource AppFont}" 
     Background="{DynamicResource ThemeBg}" d:DataContext="{d:DesignInstance {x:Type local:TermViewModel}}"
     PreviewKeyUp="OnWindowShortcut"
     AllowDrop="True"

@@ -223,5 +223,10 @@ namespace AtTerm
             Disconnect();
             Connect();
         }
+
+        public override string ToString()
+        {
+            return $"{PortName}";
+        }
     }
 }

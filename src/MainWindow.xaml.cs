@@ -38,7 +38,6 @@ namespace AtTerm
         protected override void OnActivated(EventArgs e)
         {
             base.OnActivated(e);
-
         }
 
         public TermViewModel ViewModel => this.DataContext as TermViewModel;

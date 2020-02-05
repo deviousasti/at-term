@@ -143,14 +143,17 @@ namespace AtTerm
 
         public string LogFileName { get; set; }
 
+        public string Title => $"AT Term - {TTy}";
+
         #endregion
 
         public TermViewModel(ITTy tty)
         {
-            this.TTy = tty as SerialTty;
+            TTy = tty as SerialTty;
             tty.Received += text => Write(new ReceiveEvent { Text = text });
             tty.Connected += text => Write(new ConnectionEvent { Text = text });
             tty.Disconnected += text => Write(new DisconnectionEvent { Text = text });
+            tty.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Title));
 
             AddFavouritesCommand = new RelayCommand(() => AddToFavourites(QualifiedCommmandText), () => true);
 

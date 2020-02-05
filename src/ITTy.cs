@@ -1,8 +1,9 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace AtTerm
 {
-    public interface ITTy
+    public interface ITTy : INotifyPropertyChanged
     {
         event Action<string> Received;
         event Action<string> Connected;
