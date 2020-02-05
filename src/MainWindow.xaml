@@ -124,8 +124,8 @@
                         <Storyboard x:Key="OnSendFlash">
                             <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)" Storyboard.TargetName="bggrid">
                                 <EasingColorKeyFrame KeyTime="0" Value="#FFCEE484"/>
-                                <EasingColorKeyFrame KeyTime="0:0:0.25" Value="#FFF">                                    
-                                </EasingColorKeyFrame>
+                                <EasingColorKeyFrame KeyTime="0:0:0.25" Value="#FFF" />
+                                <DiscreteColorKeyFrame KeyTime="0:0:0.26" Value="Transparent" />
                             </ColorAnimationUsingKeyFrames>
                         </Storyboard>
                     </DataTemplate.Resources>

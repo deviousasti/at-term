@@ -151,7 +151,8 @@ namespace System.Windows.Controls
         protected override void OnDropDownOpened(EventArgs e)
         {
             // Avoid the automatic selection of the first letter (As next letter will cause overwrite)
-            var textBox = Keyboard.FocusedElement as TextBox;
+            var textBox = EditableTextBox;
+
             if (textBox != null && textBox.Text.Length == 1 && textBox.SelectionLength == 1)
             {
                 textBox.Select(1, textBox.SelectionLength);

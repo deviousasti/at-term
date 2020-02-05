@@ -94,6 +94,11 @@ namespace AtTerm
                 ViewModel.SendLast();
             }
 
+            if (hasCtrl && e.Key == Key.D)
+            {
+                ViewModel.AddFavouritesCommand.Execute(null);
+            }
+
             if (e.Key == Key.Escape)
             {
                 ViewModel.ClearText();
@@ -103,6 +108,14 @@ namespace AtTerm
             {
                 ViewModel.CycleHistory(e.Key == Key.Up);
                 CommandInput.CursorToEnd();
+            }
+
+            if (hasCtrl && e.Key == Key.Up)
+            {
+                var index = LogView.SelectedIndex == -1 ? LogView.Items.Count - 1 : LogView.SelectedIndex;
+                LogView.SelectedItem = ViewModel.Log[index];
+                var item = LogView.ItemContainerGenerator.ContainerFromIndex(index) as ListViewItem;
+                item?.Focus();
             }
 
         }
@@ -129,8 +142,7 @@ namespace AtTerm
             }
 
             if (e.Key == Key.Escape)
-            {
-                listview.SelectedIndex = -1;
+            {                
                 CommandInput.Focus();
             }
 
