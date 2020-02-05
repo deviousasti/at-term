@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -161,7 +162,14 @@ namespace AtTerm
         {
             try
             {
-                Received?.Invoke(Port.ReadExisting()?.Trim());
+                var builder = new StringBuilder();
+                while (Port.BytesToRead > 0)
+                {
+                    builder.Append(Port.ReadExisting());
+                    Thread.Yield();
+                }
+                
+                Received?.Invoke(builder.ToString());
             }
             catch (Exception ex)
             {
