@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -219,6 +220,19 @@ namespace AtTerm
                                HistoryIndex > max ? 0 :
                                HistoryIndex;
                 CommandText = History[Math.Abs(HistoryIndex)];
+            }
+        }
+
+        public void SendFile(string filename)
+        {
+            try
+            {
+                var contents = File.ReadAllText(filename);
+                Send(contents);
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceError(ex.ToString());
             }
         }
 

@@ -9,6 +9,7 @@
         Title="AT Term" Height="450" Width="800" FontFamily="{StaticResource AppFont}" 
     Background="{DynamicResource ThemeBg}" d:DataContext="{d:DesignInstance {x:Type local:TermViewModel}}"
     PreviewKeyUp="OnWindowShortcut"
+    AllowDrop="True"
     >
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>

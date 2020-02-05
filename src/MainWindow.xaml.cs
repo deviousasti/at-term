@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -176,6 +177,20 @@ namespace AtTerm
             if (hasCtrl && (e.Key == Key.OemPlus || e.Key == Key.Add))
             {
                 LogView.FontSize++;
+            }
+        }
+
+        protected override void OnDrop(DragEventArgs e)
+        {
+            base.OnDrop(e);
+            var formats = e.Data.GetFormats();
+            if (!formats.Contains("FileName"))
+                return;
+
+            var files = e.Data.GetData("FileName") as string[] ?? new string[] { };
+            foreach (var file in files)
+            {
+                ViewModel.SendFile(file);
             }
         }
     }
