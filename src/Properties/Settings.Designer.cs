@@ -22,5 +22,65 @@ namespace AtTerm.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("COM1")]
+        public string LastPort {
+            get {
+                return ((string)(this["LastPort"]));
+            }
+            set {
+                this["LastPort"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("115200")]
+        public string LastBaud {
+            get {
+                return ((string)(this["LastBaud"]));
+            }
+            set {
+                this["LastBaud"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("8N1")]
+        public string LastSetting {
+            get {
+                return ((string)(this["LastSetting"]));
+            }
+            set {
+                this["LastSetting"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0,0")]
+        public global::System.Windows.Point LastWindowPosition {
+            get {
+                return ((global::System.Windows.Point)(this["LastWindowPosition"]));
+            }
+            set {
+                this["LastWindowPosition"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0,0")]
+        public global::System.Windows.Size LastWindowSize {
+            get {
+                return ((global::System.Windows.Size)(this["LastWindowSize"]));
+            }
+            set {
+                this["LastWindowSize"] = value;
+            }
+        }
     }
 }

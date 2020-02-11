@@ -21,11 +21,13 @@ namespace AtTerm
     /// </summary>
     public partial class MainWindow : Window
     {
+
         public MainWindow(TermViewModel viewModel)
         {
-            InitializeComponent();
+            InitializeComponent();            
             DataContext = viewModel;
             Loaded += (s, e) => FocusManager.SetFocusedElement(this, CommandInput);
+            
         }
 
 
