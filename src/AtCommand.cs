@@ -23,7 +23,6 @@ namespace AtTerm
 
         public static bool IsValidCommand(string command) => !String.IsNullOrWhiteSpace(command);
 
-
         public static AtCommand Parse(string raw)
         {
             var line = raw.Trim();
@@ -57,6 +56,7 @@ namespace AtTerm
             return String.IsNullOrWhiteSpace(commandText) ? "AT" :
                 commandText.StartsWith(">") ? commandText.Substring(1) :
                 commandText.StartsWith("$") ? $"{commandText}*{MTKCheckSum(commandText)}" :
+                commandText.StartsWith("AT+") ? commandText :
                 $"AT+{commandText}";
         }
 
