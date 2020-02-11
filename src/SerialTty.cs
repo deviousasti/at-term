@@ -31,6 +31,7 @@ namespace AtTerm
             {
                 _portName = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(PortNameSuggestions));
             }
         }
 
@@ -118,6 +119,7 @@ namespace AtTerm
                 Port = instance;
                 Port.PinChanged += OnPinChanged;
                 Port.DataReceived += OnDataReceived;
+                Port.ErrorReceived += OnErrorReceived;
                 Connected?.Invoke($"Connected to {PortName}");
                 OnPropertyChanged(nameof(IsConnected));
                 IsStarted = true;
@@ -128,6 +130,11 @@ namespace AtTerm
             }
 
             return IsConnected;
+        }
+
+        private void OnErrorReceived(object sender, SerialErrorReceivedEventArgs e)
+        {
+            
         }
 
         public bool Disconnect()
@@ -141,6 +148,7 @@ namespace AtTerm
                 Disconnected?.Invoke($"Disconnected from {PortName}");
                 IsStarted = false;
                 OnPropertyChanged(nameof(IsConnected));
+                OnPropertyChanged(nameof(PortNameSuggestions));
                 return true;
             }
             catch (Exception ex)
@@ -205,7 +213,10 @@ namespace AtTerm
         public void Send(string text)
         {
             try
-            {
+            {                
+                if (!IsConnected && IsStarted)
+                    Disconnect();
+
                 Port.Write(text);
             }
             catch (Exception ex)
