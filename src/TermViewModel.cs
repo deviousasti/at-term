@@ -313,11 +313,12 @@ namespace AtTerm
         }
 
         public const string CRLF = "\r\n";
-        public void Send(string command)
+        public void Send(string command, string display = default)
         {
             if (!TTy.IsConnected)
                 return;
-            Write(new SendEvent { Text = command });
+
+            Write(new SendEvent { Text = display ?? command });
             TTy.Send(command.EndsWith(CRLF) ? command : command + CRLF);
         }
 

@@ -24,10 +24,10 @@ namespace AtTerm
 
         public MainWindow(TermViewModel viewModel)
         {
-            InitializeComponent();            
+            InitializeComponent();
             DataContext = viewModel;
             Loaded += (s, e) => FocusManager.SetFocusedElement(this, CommandInput);
-            
+
         }
 
 
@@ -101,10 +101,23 @@ namespace AtTerm
                 ViewModel.AddFavouritesCommand.Execute(null);
             }
 
+            if (hasCtrl && e.Key == Key.Z)
+            {
+                ViewModel.Send(Char.ToString((char)26), "Ctrl + Z");
+                return;
+            }
+
+            if (hasCtrl && e.Key == Key.E)
+            {
+                ViewModel.Send(Char.ToString((char)27), "Ctrl + Esc");
+                return;
+            }
+
             if (e.Key == Key.Escape)
             {
                 ViewModel.ClearText();
             }
+
 
             if (!CommandInput.IsDropDownOpen && !hasCtrl && (e.Key == Key.Up || e.Key == Key.Down))
             {
@@ -144,7 +157,7 @@ namespace AtTerm
             }
 
             if (e.Key == Key.Escape)
-            {                
+            {
                 CommandInput.Focus();
             }
 
