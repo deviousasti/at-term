@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -15,14 +17,14 @@ namespace AtTerm
     {
         public MainWindow UI { get; set; }
 
-        private Properties.Settings Settings { get; } =
-               AtTerm.Properties.Settings.Default;
+        private Properties.Settings Settings { get; set; }
+        private string[] DefaultArguments;
 
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+            LoadSettings();
 
-            string[] DefaultArguments = { Settings.LastPort, Settings.LastBaud, Settings.LastSetting  };
 
             var args =
                 e.Args
@@ -36,6 +38,38 @@ namespace AtTerm
             ViewModel.Start();
 
             (UI = new MainWindow(ViewModel)).Show();
+        }
+
+        public void LoadSettings()
+        {
+            string file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "at-term.exe.config");
+            try
+            {
+                if (!File.Exists(file))
+                {
+                    var config = AtTerm.Properties.Resources.ResourceManager.GetString("App");
+                    File.WriteAllText(file, config);
+                    Settings = new AtTerm.Properties.Settings();
+                    DefaultArguments = new[] { "COM1", "115200", "8N1" };
+                }
+                else
+                {
+                    Settings = AtTerm.Properties.Settings.Default;
+                    Settings.LastPort.ToString();
+                    DefaultArguments = new[] { Settings.LastPort, Settings.LastBaud, Settings.LastSetting };
+                }
+            }
+            catch (Exception)
+            {
+                try
+                {
+                    File.Delete(file);
+                }
+                catch (Exception)
+                {
+                    //do nothing
+                }
+            }
         }
 
         protected override void OnExit(ExitEventArgs e)

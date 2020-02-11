@@ -61,7 +61,57 @@ namespace AtTerm.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+        ///&lt;configuration&gt;
+        ///    &lt;configSections&gt;
+        ///        &lt;sectionGroup name=&quot;userSettings&quot; type=&quot;System.Configuration.UserSettingsGroup, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089&quot; &gt;
+        ///            &lt;section name=&quot;AtTerm.Properties.Settings&quot; type=&quot;System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089&quot; allowExeDefinition=&quot;MachineToLocalUser&quot; requirePermission=&quot;false&quot; /&gt;
+        ///        &lt;/sectio [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string App {
+            get {
+                return ResourceManager.GetString("App", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AT+CFUN=&lt;fun&gt;,&lt;fun&gt;
+        ///AT+CMGR
+        ///ATE&lt;fun&gt;
+        ///AT+QPOWD=&lt;fun&gt;
+        ///AT+QGNSSC=&lt;fun&gt;
+        ///AT+QIACT
+        ///AT+CGACT=&lt;fun&gt;[,&lt;fun&gt;]
+        ///AT+QGNSSRD=&lt;fun&gt;
+        ///AT+QGNSSRD?
+        ///AT+CSQ
+        ///AT+CREG?
+        ///AT+CREG=&lt;fun&gt;
+        ///AT+CGSN
+        ///AT+GSN
+        ///AT+QNSTATUS
+        ///AT+QLTS
+        ///AT+QNITZ=&lt;fun&gt;
+        ///AT+CTZU?
+        ///AT+CTZR=&lt;fun&gt;
+        ///AT+CTZR?
+        ///AT+CTZR=&lt;fun&gt;
+        ///AT+QSIMDET=&lt;fun&gt;,&lt;fun&gt;,&lt;fun&gt;
+        ///AT+QSIMSTAT?
+        ///AT+QSIMSTAT=&lt;fun&gt;
+        ///AT+CCID
+        ///AT+QCCID
+        ///AT+COPS?
+        ///AT+COPS=&lt;fun&gt;[,&lt;fun&gt;[,&lt;fun&gt;]]
+        ///AT+CPOL?
+        ///AT+CPOL=&lt;fun&gt;[,&lt;fun&gt;[,&lt;fun&gt;]]
+        ///AT+COPN
+        ///AT+QENG?
+        ///AT+QENG=&lt;fun&gt;[,&lt;fun&gt;]
+        ///ATA
+        ///AT+CLCC
+        ///ATD&lt;fun&gt;;
+        ///ATH0        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Commands {
             get {
