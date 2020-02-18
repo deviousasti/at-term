@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Windows;
 
@@ -57,7 +58,23 @@ namespace AtTerm
                 commandText.StartsWith(">") ? commandText.Substring(1) :
                 commandText.StartsWith("$") ? $"{commandText}*{MTKCheckSum(commandText)}" :
                 commandText.StartsWith("AT+") ? commandText :
+                commandText.StartsWith("0x") ? GetHexString(commandText) :
                 $"AT+{commandText}";
+        }
+
+        public static string GetHexString(string commandText)
+        {
+            var chars =
+                commandText
+                .Split(' ')
+                .Select(hex => hex.StartsWith("0x", StringComparison.InvariantCultureIgnoreCase) ? hex.Substring(2) : hex)
+                .SelectMany(block => Enumerable.Range(0, block.Length / 2).Select(i => block.Substring(i * 2, 2)))
+                .Select(hex => (success: byte.TryParse(hex, NumberStyles.HexNumber, null, out var value), value))
+                .Where(result => result.success)
+                .Select(result => (char)result.value)
+                .ToArray();
+
+            return new string(chars);
         }
 
         public static string Unqualify(string commandText)
