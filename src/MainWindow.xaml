@@ -63,7 +63,7 @@
                                 <DataTrigger Binding="{Binding IsConnected}" Value="False">
                                     <Setter Property="Foreground" Value="Red" />
                                     <Setter Property="ToolTip" Value="Disconnected" />
-                                    <Setter Property="Tag" Value="power_off" />
+                                    <Setter Property="Tag" Value="poweroff" />
                                     <Setter Property="Background" Value="Blue" />
                                 </DataTrigger>
                             </Style.Triggers>
@@ -79,7 +79,7 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <ToggleButton x:Name="LogButton" Command="{Binding LogCommand}" IsChecked="{Binding IsLogging, Mode=TwoWay}" BorderThickness="0" Background="White" Padding="4">
                     <TextBlock>
-                        <Run BaselineAlignment="Center" FontSize="16" FontFamily="{StaticResource IconFont}">book</Run>
+                        <Run BaselineAlignment="Center" FontSize="16" FontFamily="{StaticResource IconFont}" Text="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton, Mode=FindAncestor}, Path=Tag}"></Run>
                         <Run>Log</Run>
                     </TextBlock>
                     <ToggleButton.Style>
@@ -87,14 +87,14 @@
                             <Setter Property="Template" Value="{StaticResource Button}" />
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding IsLogging}" Value="True">
-                                    <Setter Property="Foreground" Value="Green" />
+                                    <Setter Property="Foreground" Value="DarkRed" />
                                     <Setter Property="ToolTip" Value="Currently logging to file" />
-                                    <Setter Property="Tag" Value="power" />
+                                    <Setter Property="Tag" Value="recordon" />                                    
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding IsLogging}" Value="False">
                                     <Setter Property="Foreground" Value="Gray" />
                                     <Setter Property="ToolTip" Value="Click to start logging" />
-                                    <Setter Property="Tag" Value="power_off" />
+                                    <Setter Property="Tag" Value="record" />
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -134,7 +134,7 @@
                             <ColumnDefinition Width="{DynamicResource LeftMargin}"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock FontFamily="{StaticResource IconFont}" Foreground="{StaticResource SentFg}" VerticalAlignment="Center" FontSize="16" Margin="4,0,0,0"><Run Text="chevron_right"/></TextBlock>
+                        <TextBlock FontFamily="{StaticResource IconFont}" Foreground="{StaticResource SentFg}" VerticalAlignment="Center" FontSize="16" Margin="4,0,0,0"><Run Text="right"/></TextBlock>
                         <TextBlock Text="{Binding Text}" Foreground="{StaticResource SentFg}" Grid.Column="1" Padding="4" />
                     </Grid>
                     <DataTemplate.Triggers>
@@ -150,7 +150,7 @@
                             <ColumnDefinition Width="{DynamicResource LeftMargin}"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock FontFamily="{StaticResource IconFont}" Foreground="{DynamicResource RecvFg}" VerticalAlignment="Center" FontSize="16"><Run Text="chevron_left"/></TextBlock>
+                        <TextBlock FontFamily="{StaticResource IconFont}" Foreground="{DynamicResource RecvFg}" VerticalAlignment="Center" FontSize="16"><Run Text="left"/></TextBlock>
                         <TextBlock Text="{Binding Text}" Grid.Column="1" />
                     </Grid>
                 </DataTemplate>
@@ -172,7 +172,7 @@
                             <ColumnDefinition Width="{DynamicResource LeftMargin}"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock FontFamily="{StaticResource IconFont}" Foreground="{DynamicResource DisconnectFg}" VerticalAlignment="Center" FontSize="16">link_off</TextBlock>
+                        <TextBlock FontFamily="{StaticResource IconFont}" Foreground="{DynamicResource DisconnectFg}" VerticalAlignment="Center" FontSize="16">linkoff</TextBlock>
                         <TextBlock Text="{Binding Text}" Foreground="{StaticResource DisconnectFg}" Grid.Column="1" />
                     </Grid>
                 </DataTemplate>

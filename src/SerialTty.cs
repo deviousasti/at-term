@@ -31,7 +31,6 @@ namespace AtTerm
             {
                 _portName = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(PortNameSuggestions));
             }
         }
 

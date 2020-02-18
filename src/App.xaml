@@ -8,7 +8,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Theme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <FontFamily x:Key="IconFont">./Fonts/#Material Icons</FontFamily>
+            <FontFamily x:Key="IconFont">./Fonts/#Material-Icons</FontFamily>
             <FontFamily x:Key="AppFont">Segoe UI</FontFamily>
         </ResourceDictionary>
     </Application.Resources>
