@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -189,7 +190,16 @@ namespace AtTerm
                     return;
                 }
 
-
+                if(e.Key == Key.T)
+                {
+                    var item = listview.SelectedItem;
+                    if (item is TextEvent textEvent)
+                    {
+                        TextEvent.Start = textEvent.Timestamp;
+                        ICollectionView view = CollectionViewSource.GetDefaultView(listview.Items);
+                        view.Refresh();
+                    }
+                }
                 //if (e.Key == Key.V)
                 //{
                 //    Clipboard.GetText().Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
