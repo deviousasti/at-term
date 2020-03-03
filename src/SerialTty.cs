@@ -216,7 +216,7 @@ namespace AtTerm
                 if (!IsConnected && IsStarted)
                     Disconnect();
 
-                Port.Write(text);
+               Task.Factory.StartNew(() => Port.Write(text));
             }
             catch (Exception ex)
             {
