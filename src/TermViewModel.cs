@@ -24,6 +24,12 @@ namespace AtTerm
 
         public string Text { get; set; } = String.Empty;
 
+        public static DateTime Start { get; set; }
+
+        public DateTime Timestamp { get; set; }
+
+        public string RelativeTimestamp => (Timestamp - Start).ToString(@"mm\:ss");
+
         public override string ToString()
         {
             return Text;
@@ -377,6 +383,12 @@ namespace AtTerm
 
         public void Write(TextEvent evt)
         {
+            if (evt is ConnectionEvent || TextEvent.Start == DateTime.MinValue)
+                TextEvent.Start = DateTime.Now;
+
+            if (evt.Timestamp == default)
+                evt.Timestamp = DateTime.Now;
+
             DispatcherInvoke(() =>
             {
                 if (Log.Count > 100000)
@@ -389,7 +401,7 @@ namespace AtTerm
 
             if (IsLogging && !String.IsNullOrEmpty(LogFileName))
             {
-                var lines = evt.Text.Split('\n').Select(s => $"{DateTime.Now}\t{evt.Type}\t{s.Trim()}");
+                var lines = evt.Text.Split('\n').Select(s => $"{evt.Timestamp}\t{evt.Type}\t{s.Trim()}");
                 File.AppendAllLines(LogFileName, lines);
             }
         }

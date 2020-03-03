@@ -6,10 +6,12 @@
     <SolidColorBrush x:Key="ThemeBg" Color="White"/>
     <SolidColorBrush x:Key="SentFg" Color="#FF2D6308"/>
     <GridLength x:Key="LeftMargin">30</GridLength>
+    <GridLength x:Key="RightMargin">50</GridLength>
     <System:Double x:Key="LargeFontSize">18</System:Double>
     <SolidColorBrush x:Key="RecvFg" Color="#FF63085B"/>
     <SolidColorBrush x:Key="ConnectFg" Color="#FF53B824"/>
     <SolidColorBrush x:Key="DisconnectFg" Color="#FFBF1C1C"/>
+    <SolidColorBrush x:Key="TimestampFg" Color="#999"/>
     
   
     <Style TargetType="ComboBox">
@@ -19,6 +21,10 @@
         <Setter Property="BorderThickness" Value="0" />
     </Style>
 
+    <Style x:Key="Timestamp" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource TimestampFg}" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+    </Style>
 
 
     <Style TargetType="ToolTip">

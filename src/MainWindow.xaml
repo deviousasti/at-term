@@ -27,6 +27,13 @@
                 <EasingColorKeyFrame KeyTime="0:0:0.2" Value="Black"/>
             </ColorAnimationUsingKeyFrames>
         </Storyboard>
+        <Storyboard x:Key="OnSendFlash">
+            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)" Storyboard.TargetName="bggrid">
+                <EasingColorKeyFrame KeyTime="0" Value="#FFCEE484"/>
+                <EasingColorKeyFrame KeyTime="0:0:0.25" Value="#FFF" />
+                <DiscreteColorKeyFrame KeyTime="0:0:0.26" Value="Transparent" />
+            </ColorAnimationUsingKeyFrames>
+        </Storyboard>
     </Window.Resources>
     <Window.Triggers>
         <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="heart_button">
@@ -110,6 +117,7 @@
             </StackPanel>
         </Grid>
 
+        
         <ListView x:Name="LogView"
                   ItemsSource="{Binding Log}" Grid.Row="1" Background="{x:Null}" FontFamily="Consolas" 
                   ScrollViewer.VerticalScrollBarVisibility="Visible" 
@@ -117,25 +125,18 @@
                   SelectedItem="{Binding SelectedLog}"
                   MouseDoubleClick="OnListViewDoubleClick"
                   KeyUp="OnListViewKeyUp"                  
-                  BorderThickness="0" Margin="0,0,0,5" >
+                  BorderThickness="0" Margin="0,0,0,5" >            
             <ListView.Resources>
                 <DataTemplate DataType="{x:Type local:SendEvent}">
-                    <DataTemplate.Resources>
-                        <Storyboard x:Key="OnSendFlash">
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)" Storyboard.TargetName="bggrid">
-                                <EasingColorKeyFrame KeyTime="0" Value="#FFCEE484"/>
-                                <EasingColorKeyFrame KeyTime="0:0:0.25" Value="#FFF" />
-                                <DiscreteColorKeyFrame KeyTime="0:0:0.26" Value="Transparent" />
-                            </ColorAnimationUsingKeyFrames>
-                        </Storyboard>
-                    </DataTemplate.Resources>
-                    <Grid x:Name="bggrid" d:DesignWidth="114.75" Background="Transparent">
+                    <Grid Margin="4" x:Name="bggrid" d:DesignWidth="114.75" Background="Transparent">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="{DynamicResource LeftMargin}"/>
                             <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="{DynamicResource RightMargin}"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock FontFamily="{StaticResource IconFont}" Foreground="{StaticResource SentFg}" VerticalAlignment="Center" FontSize="16" Margin="4,0,0,0"><Run Text="right"/></TextBlock>
-                        <TextBlock Text="{Binding Text}" Foreground="{StaticResource SentFg}" Grid.Column="1" Padding="4" />
+                        <TextBlock Text="{Binding Text}" Foreground="{StaticResource SentFg}" Grid.Column="1" />
+                        <TextBlock Text="{Binding RelativeTimestamp}" ToolTip="{Binding Timestamp}" Grid.Column="2" Style="{StaticResource Timestamp}"/>
                     </Grid>
                     <DataTemplate.Triggers>
                         <EventTrigger RoutedEvent="FrameworkElement.Loaded">
@@ -149,9 +150,11 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="{DynamicResource LeftMargin}"/>
                             <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="{DynamicResource RightMargin}"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock FontFamily="{StaticResource IconFont}" Foreground="{DynamicResource RecvFg}" VerticalAlignment="Center" FontSize="16"><Run Text="left"/></TextBlock>
                         <TextBlock Text="{Binding Text}" Grid.Column="1" />
+                        <TextBlock Text="{Binding RelativeTimestamp}" ToolTip="{Binding Timestamp}" Grid.Column="2" Style="{StaticResource Timestamp}"/>
                     </Grid>
                 </DataTemplate>
 
@@ -160,9 +163,11 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="{DynamicResource LeftMargin}"/>
                             <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="{DynamicResource RightMargin}"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock FontFamily="{StaticResource IconFont}" Foreground="{DynamicResource ConnectFg}" VerticalAlignment="Center" FontSize="16"><Run Text="link"/></TextBlock>
                         <TextBlock Text="{Binding Text}" Foreground="{StaticResource ConnectFg}" Grid.Column="1" />
+                        <TextBlock Text="{Binding RelativeTimestamp}" ToolTip="{Binding Timestamp}" Grid.Column="2" Style="{StaticResource Timestamp}"/>
                     </Grid>
                 </DataTemplate>
 
@@ -171,9 +176,11 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="{DynamicResource LeftMargin}"/>
                             <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="{DynamicResource RightMargin}"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock FontFamily="{StaticResource IconFont}" Foreground="{DynamicResource DisconnectFg}" VerticalAlignment="Center" FontSize="16">linkoff</TextBlock>
                         <TextBlock Text="{Binding Text}" Foreground="{StaticResource DisconnectFg}" Grid.Column="1" />
+                        <TextBlock Text="{Binding RelativeTimestamp}" ToolTip="{Binding Timestamp}" Grid.Column="2" Style="{StaticResource Timestamp}"/>
                     </Grid>
                 </DataTemplate>
 

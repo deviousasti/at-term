@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -219,6 +220,11 @@ namespace AtTerm
             var files = e.Data.GetData("FileName") as string[] ?? new string[] { };
             foreach (var file in files)
             {
+                if(ViewModel.CommandText.IndexOf("$length",  StringComparison.InvariantCultureIgnoreCase) >= 0)
+                {
+                    ViewModel.CommandText = ViewModel.CommandText.Replace("$length", new FileInfo(file).Length.ToString());
+                    ViewModel.Send();
+                }
                 ViewModel.SendFile(file);
             }
         }
