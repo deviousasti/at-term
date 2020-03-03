@@ -27,13 +27,6 @@
                 <EasingColorKeyFrame KeyTime="0:0:0.2" Value="Black"/>
             </ColorAnimationUsingKeyFrames>
         </Storyboard>
-        <Storyboard x:Key="OnSendFlash">
-            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)" Storyboard.TargetName="bggrid">
-                <EasingColorKeyFrame KeyTime="0" Value="#FFCEE484"/>
-                <EasingColorKeyFrame KeyTime="0:0:0.25" Value="#FFF" />
-                <DiscreteColorKeyFrame KeyTime="0:0:0.26" Value="Transparent" />
-            </ColorAnimationUsingKeyFrames>
-        </Storyboard>
     </Window.Resources>
     <Window.Triggers>
         <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="heart_button">
@@ -138,11 +131,6 @@
                         <TextBlock Text="{Binding Text}" Foreground="{StaticResource SentFg}" Grid.Column="1" />
                         <TextBlock Text="{Binding RelativeTimestamp}" ToolTip="{Binding FullTimestamp}" Grid.Column="2" Style="{StaticResource Timestamp}"/>
                     </Grid>
-                    <DataTemplate.Triggers>
-                        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
-                            <BeginStoryboard x:Name="OnSendFlash_BeginStoryboard" Storyboard="{StaticResource OnSendFlash}"/>
-                        </EventTrigger>
-                    </DataTemplate.Triggers>
                 </DataTemplate>
 
                 <DataTemplate DataType="{x:Type local:ReceiveEvent}">
