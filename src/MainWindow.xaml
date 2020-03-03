@@ -136,7 +136,7 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock FontFamily="{StaticResource IconFont}" Foreground="{StaticResource SentFg}" VerticalAlignment="Center" FontSize="16" Margin="4,0,0,0"><Run Text="right"/></TextBlock>
                         <TextBlock Text="{Binding Text}" Foreground="{StaticResource SentFg}" Grid.Column="1" />
-                        <TextBlock Text="{Binding RelativeTimestamp}" ToolTip="{Binding Timestamp}" Grid.Column="2" Style="{StaticResource Timestamp}"/>
+                        <TextBlock Text="{Binding RelativeTimestamp}" ToolTip="{Binding FullTimestamp}" Grid.Column="2" Style="{StaticResource Timestamp}"/>
                     </Grid>
                     <DataTemplate.Triggers>
                         <EventTrigger RoutedEvent="FrameworkElement.Loaded">
@@ -154,7 +154,7 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock FontFamily="{StaticResource IconFont}" Foreground="{DynamicResource RecvFg}" VerticalAlignment="Center" FontSize="16"><Run Text="left"/></TextBlock>
                         <TextBlock Text="{Binding Text}" Grid.Column="1" />
-                        <TextBlock Text="{Binding RelativeTimestamp}" ToolTip="{Binding Timestamp}" Grid.Column="2" Style="{StaticResource Timestamp}"/>
+                        <TextBlock Text="{Binding RelativeTimestamp}" ToolTip="{Binding FullTimestamp}" Grid.Column="2" Style="{StaticResource Timestamp}"/>
                     </Grid>
                 </DataTemplate>
 
@@ -167,7 +167,7 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock FontFamily="{StaticResource IconFont}" Foreground="{DynamicResource ConnectFg}" VerticalAlignment="Center" FontSize="16"><Run Text="link"/></TextBlock>
                         <TextBlock Text="{Binding Text}" Foreground="{StaticResource ConnectFg}" Grid.Column="1" />
-                        <TextBlock Text="{Binding RelativeTimestamp}" ToolTip="{Binding Timestamp}" Grid.Column="2" Style="{StaticResource Timestamp}"/>
+                        <TextBlock Text="{Binding RelativeTimestamp}" ToolTip="{Binding FullTimestamp}" Grid.Column="2" Style="{StaticResource Timestamp}"/>
                     </Grid>
                 </DataTemplate>
 
@@ -180,7 +180,7 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock FontFamily="{StaticResource IconFont}" Foreground="{DynamicResource DisconnectFg}" VerticalAlignment="Center" FontSize="16">linkoff</TextBlock>
                         <TextBlock Text="{Binding Text}" Foreground="{StaticResource DisconnectFg}" Grid.Column="1" />
-                        <TextBlock Text="{Binding RelativeTimestamp}" ToolTip="{Binding Timestamp}" Grid.Column="2" Style="{StaticResource Timestamp}"/>
+                        <TextBlock Text="{Binding RelativeTimestamp}" ToolTip="{Binding FullTimestamp}" Grid.Column="2" Style="{StaticResource Timestamp}"/>
                     </Grid>
                 </DataTemplate>
 

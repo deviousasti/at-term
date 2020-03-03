@@ -29,6 +29,8 @@ namespace AtTerm
         public DateTime Timestamp { get; set; }
 
         public string RelativeTimestamp => (Timestamp - Start).ToString(@"mm\:ss");
+        
+        public string FullTimestamp => Timestamp.ToString(@"dd/MM/yy HH:mm\:ss.ff");
 
         public override string ToString()
         {

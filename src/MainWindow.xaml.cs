@@ -175,6 +175,21 @@ namespace AtTerm
                     ViewModel.Send(Clipboard.GetText());
                 }
 
+
+                if (e.Key == Key.M)
+                {
+                    var items = listview.SelectedItems.OfType<TextEvent>();
+                    var avg =
+                    items
+                        .Zip(items.Skip(1), (e2, e1) => e2.Timestamp - e1.Timestamp)
+                        .Select(ts => Math.Abs(ts.TotalMilliseconds))
+                        .Average();
+
+                    MessageBox.Show($"Average difference: {Math.Round(avg, 2)}ms", "Measure", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+
+
                 //if (e.Key == Key.V)
                 //{
                 //    Clipboard.GetText().Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
@@ -220,7 +235,7 @@ namespace AtTerm
             var files = e.Data.GetData("FileName") as string[] ?? new string[] { };
             foreach (var file in files)
             {
-                if(ViewModel.CommandText.IndexOf("$length",  StringComparison.InvariantCultureIgnoreCase) >= 0)
+                if (ViewModel.CommandText.IndexOf("$length", StringComparison.InvariantCultureIgnoreCase) >= 0)
                 {
                     ViewModel.CommandText = ViewModel.CommandText.Replace("$length", new FileInfo(file).Length.ToString());
                     ViewModel.Send();
