@@ -137,6 +137,9 @@ namespace AtTerm
             }
         }
 
+        public ICollection<TextEvent> SelectedLogItems { get; set; } 
+            = new List<TextEvent>();
+
         public RelayCommand ClearCommand { get; }
 
         public RelayCommand LogCommand { get; }

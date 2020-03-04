@@ -179,26 +179,13 @@ namespace AtTerm
 
                 if (e.Key == Key.M)
                 {
-                    var items = listview.SelectedItems.OfType<TextEvent>();
-                    var avg =
-                    items
-                        .Zip(items.Skip(1), (e2, e1) => e2.Timestamp - e1.Timestamp)
-                        .Select(ts => Math.Abs(ts.TotalMilliseconds))
-                        .Average();
-
-                    MessageBox.Show($"Average difference: {Math.Round(avg, 2)}ms", "Measure", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MeasureAverage(listview);
                     return;
                 }
 
-                if(e.Key == Key.T)
+                if (e.Key == Key.T)
                 {
-                    var item = listview.SelectedItem;
-                    if (item is TextEvent textEvent)
-                    {
-                        TextEvent.Start = textEvent.Timestamp;
-                        ICollectionView view = CollectionViewSource.GetDefaultView(listview.Items);
-                        view.Refresh();
-                    }
+                    RebaseSelected(listview);
                 }
                 //if (e.Key == Key.V)
                 //{
@@ -207,6 +194,35 @@ namespace AtTerm
                 //}
             }
 
+        }
+
+        private void RebaseSelected(ListView listview)
+        {
+            var item = listview.SelectedItem;
+            if (item is TextEvent textEvent)
+            {
+                TextEvent.Start = textEvent.Timestamp;
+                ICollectionView view = CollectionViewSource.GetDefaultView(listview.Items);
+                view.Refresh();
+            }
+        }
+
+        private void MeasureAverage(ListView listview)
+        {
+            var items = listview.SelectedItems.Cast<TextEvent>();
+            if (items.Count() < 2)
+            {
+                MessageBox.Show($"Select at least two logs to measure", "Measure", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            var avg =
+            items
+                .Zip(items.Skip(1), (e2, e1) => e2.Timestamp - e1.Timestamp)
+                .Select(ts => Math.Abs(ts.TotalMilliseconds))
+                .Average();
+
+            MessageBox.Show($"Average difference: {Math.Round(avg, 2)}ms", "Measure", MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
         }
 
         private void OnWindowShortcut(object sender, KeyEventArgs e)
@@ -252,6 +268,16 @@ namespace AtTerm
                 }
                 ViewModel.SendFile(file);
             }
+        }
+
+        private void OnMeasure(object sender, RoutedEventArgs e)
+        {
+            MeasureAverage(LogView);
+        }
+
+        private void OnRebaseTime(object sender, RoutedEventArgs e)
+        {
+            RebaseSelected(LogView);
         }
     }
 }

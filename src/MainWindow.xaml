@@ -73,10 +73,16 @@
                 <ComboBox Width="100" ToolTip="Port" Text="{Binding PortName}" ItemsSource="{Binding PortNameSuggestions}" IsEditable="True" />
                 <ComboBox Width="100" ToolTip="Baud Rate" Text="{Binding PortBaud}" ItemsSource="{Binding PortBaudSuggestions}" IsEditable="True" />
                 <TextBox Width="50" ToolTip="Port Settings" Text="{Binding PortSettings}" VerticalContentAlignment="Center" BorderThickness="0"/>
-                <ToggleButton IsChecked="{Binding DtrEnabled}" Content="DTR" Margin="10,0,0,0" />
-                <ToggleButton IsChecked="{Binding RtsEnabled}" Content="RTS" />
+                <ToggleButton IsChecked="{Binding DtrEnabled}" Content="DTR" ToolTip="Data Terminal Ready" Margin="10,0,0,0" />
+                <ToggleButton IsChecked="{Binding RtsEnabled}" Content="RTS" ToolTip="Request To Send" />                
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button FontFamily="{StaticResource IconFont}" ToolTip="Measure time difference" Margin="10,0,0,0" FontSize="14" Click="OnMeasure">
+                    timer
+                </Button>
+                <Button FontFamily="{StaticResource IconFont}" ToolTip="Set time zero to selected" FontSize="14" Click="OnRebaseTime">
+                    clock
+                </Button>
                 <ToggleButton x:Name="LogButton" Command="{Binding LogCommand}" IsChecked="{Binding IsLogging, Mode=TwoWay}" BorderThickness="0" Background="White" Padding="4">
                     <TextBlock>
                         <Run BaselineAlignment="Center" FontSize="16" FontFamily="{StaticResource IconFont}" Text="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton, Mode=FindAncestor}, Path=Tag}"></Run>
@@ -116,6 +122,7 @@
                   ScrollViewer.VerticalScrollBarVisibility="Visible" 
                   ScrollViewer.ScrollChanged="OnListViewScroll"
                   SelectedItem="{Binding SelectedLog}"
+                  SelectionMode="Multiple"
                   MouseDoubleClick="OnListViewDoubleClick"
                   KeyUp="OnListViewKeyUp"                  
                   BorderThickness="0" Margin="0,0,0,5" >            
