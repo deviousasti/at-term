@@ -209,19 +209,22 @@ namespace AtTerm
 
         private void MeasureAverage(ListView listview)
         {
-            var items = listview.SelectedItems.Cast<TextEvent>();
+            var items = listview.SelectedItems.Cast<TextEvent>().OrderBy(item => item.Timestamp);
+
             if (items.Count() < 2)
             {
                 MessageBox.Show($"Select at least two logs to measure", "Measure", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
+
             var avg =
             items
                 .Zip(items.Skip(1), (e2, e1) => e2.Timestamp - e1.Timestamp)
+                .Where((pair, i) => i % 2 == 0)
                 .Select(ts => Math.Abs(ts.TotalMilliseconds))
                 .Average();
 
-            MessageBox.Show($"Average difference: {Math.Round(avg, 2)}ms", "Measure", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show($"Average send/response difference: {Math.Round(avg, 2)}ms", "Measure", MessageBoxButton.OK, MessageBoxImage.Information);
             return;
         }
 
