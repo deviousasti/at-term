@@ -59,8 +59,11 @@ namespace AtTerm
                 commandText.StartsWith("$") ? $"{commandText}*{MTKCheckSum(commandText)}" :
                 commandText.StartsWith("AT+") ? commandText :
                 commandText.StartsWith("0x") ? GetHexString(commandText) :
+                commandText.StartsWith(Base64Prefix) ? commandText :
                 $"AT+{commandText}";
         }
+
+        public const string Base64Prefix = "base64:";
 
         public static string GetHexString(string commandText)
         {
@@ -71,10 +74,10 @@ namespace AtTerm
                 .SelectMany(block => Enumerable.Range(0, block.Length / 2).Select(i => block.Substring(i * 2, 2)))
                 .Select(hex => (success: byte.TryParse(hex, NumberStyles.HexNumber, null, out var value), value))
                 .Where(result => result.success)
-                .Select(result => (char)result.value)
+                .Select(result => result.value)
                 .ToArray();
 
-            return new string(chars);
+            return Base64Prefix + Convert.ToBase64String(chars);
         }
 
         public static string Unqualify(string commandText)

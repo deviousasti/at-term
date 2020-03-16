@@ -94,12 +94,12 @@
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding IsLogging}" Value="True">
                                     <Setter Property="Foreground" Value="DarkRed" />
-                                    <Setter Property="ToolTip" Value="Currently logging to file" />
+                                    <Setter Property="ToolTip" Value="Currently logging to file (Ctrl + S to stop)" />
                                     <Setter Property="Tag" Value="recordon" />                                    
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding IsLogging}" Value="False">
                                     <Setter Property="Foreground" Value="Gray" />
-                                    <Setter Property="ToolTip" Value="Click to start logging" />
+                                    <Setter Property="ToolTip" Value="Click to start logging (Ctrl + S)" />
                                     <Setter Property="Tag" Value="record" />
                                 </DataTrigger>
                             </Style.Triggers>
@@ -122,7 +122,6 @@
                   ScrollViewer.VerticalScrollBarVisibility="Visible" 
                   ScrollViewer.ScrollChanged="OnListViewScroll"
                   SelectedItem="{Binding SelectedLog}"
-                  SelectionMode="Multiple"
                   MouseDoubleClick="OnListViewDoubleClick"
                   KeyUp="OnListViewKeyUp"                  
                   BorderThickness="0" Margin="0,0,0,5" >            

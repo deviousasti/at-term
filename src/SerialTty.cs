@@ -238,5 +238,10 @@ namespace AtTerm
         {
             return $"{PortName}";
         }
+
+        public void SendBinary(byte[] bytes)
+        {
+            Port.Write(bytes, 0, bytes.Length);
+        }
     }
 }

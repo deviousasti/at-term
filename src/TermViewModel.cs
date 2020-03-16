@@ -5,9 +5,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Threading;
 
 namespace AtTerm
 {
@@ -29,7 +27,7 @@ namespace AtTerm
         public DateTime Timestamp { get; set; }
 
         public string RelativeTimestamp => (Timestamp - Start).ToString(@"mm\:ss");
-        
+
         public string FullTimestamp => Timestamp.ToString(@"dd/MM/yy HH:mm\:ss.ff");
 
         public override string ToString()
@@ -137,7 +135,7 @@ namespace AtTerm
             }
         }
 
-        public ICollection<TextEvent> SelectedLogItems { get; set; } 
+        public ICollection<TextEvent> SelectedLogItems { get; set; }
             = new List<TextEvent>();
 
         public RelayCommand ClearCommand { get; }
@@ -324,13 +322,32 @@ namespace AtTerm
         }
 
         public const string CRLF = "\r\n";
+        
+
         public void Send(string command, string display = default)
         {
             if (!TTy.IsConnected)
                 return;
 
-            Write(new SendEvent { Text = display ?? command });
-            TTy.Send(command.EndsWith(CRLF) ? command : command + CRLF);
+            try
+            {
+                if (command.StartsWith(AtCommand.Base64Prefix))
+                {
+                    var bytes = Convert.FromBase64String(command.Substring(AtCommand.Base64Prefix.Length));
+                    TTy.SendBinary(bytes);
+                    Write(new SendEvent { Text = $"<binary data: {bytes.Length} bytes>" });
+                }
+                else
+                {
+                    Write(new SendEvent { Text = display ?? command });
+                    TTy.Send(command.EndsWith(CRLF) ? command : command + CRLF);
+                }
+            }
+            catch (Exception ex)
+            {
+                Write(new DisconnectionEvent { Text = ex.Message });
+            }
+     
         }
 
         #endregion
@@ -415,10 +432,14 @@ namespace AtTerm
 
         #endregion
 
+        #region Start/Stop
+
         public void Start()
         {
             TTy.Connect();
-        }
+        } 
+
+        #endregion
 
 
     }
