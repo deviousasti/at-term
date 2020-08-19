@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 
 namespace AtTerm
@@ -55,6 +56,7 @@ namespace AtTerm
         public static string Qualify(string commandText)
         {
             return String.IsNullOrWhiteSpace(commandText) ? "AT" :
+                Regex.IsMatch(commandText, @"AT\w*") ? commandText :
                 commandText.StartsWith(">") ? commandText.Substring(1) :
                 commandText.StartsWith("$") ? $"{commandText}*{MTKCheckSum(commandText)}" :
                 commandText.StartsWith("AT+") ? commandText :

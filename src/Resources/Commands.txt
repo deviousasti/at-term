@@ -1,6 +1,6 @@
 AT+CFUN=<fun>,<fun>
 AT+CMGR
-ATE<fun>
+ATE0
 AT+QPOWD=<fun>
 AT+QGNSSC=<fun>
 AT+QIACT
