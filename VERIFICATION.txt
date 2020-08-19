@@ -1,0 +1,15 @@
+
+Source: https://github.com/deviousasti/at-term
+Author: asti 
+Maintainer: asti 
+
+
+VERIFICATION
+------------
+
+at-term.exe in the package is from:
+https://github.com/deviousasti/at-term/releases/download/1.4/at-term.exe
+
+To verify, use:
+Invoke-WebRequest https://github.com/deviousasti/at-term/releases/download/1.4/at-term.exe -OutFile .\file.temp
+${Get-FileHash .\file.temp} -eq ${Get-FileHash .\at-term.exe }
