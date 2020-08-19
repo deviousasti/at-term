@@ -84,7 +84,11 @@ namespace AtTerm
             Send();
         }
 
-        public string QualifiedCommmandText => AtCommand.Qualify(CommandText);
+        public string QualifiedCommmandText =>
+                CurrentMode == ">" ?
+                CommandText
+                :
+                AtCommand.Qualify(CommandText);
 
 
         private AtCommand _selectedCommand;
@@ -107,12 +111,14 @@ namespace AtTerm
             set { availableCommands = value; OnPropertyChanged(); }
         }
 
-
-        public string[] AvailableModes { get; set; } =
+        private string _currentMode = "AT+";
+        public string CurrentMode
         {
-            "AT+",
-            ">"
-        };
+            get => _currentMode;
+            set { _currentMode = value; OnPropertyChanged(); }
+        }
+
+        public RelayCommand SwitchModeCommand { get; }
 
         public bool HasCommand => !String.IsNullOrWhiteSpace(CommandText);
 
@@ -143,7 +149,6 @@ namespace AtTerm
         public RelayCommand LogCommand { get; }
 
         private bool _isLogging;
-
         public bool IsLogging
         {
             get => _isLogging;
@@ -164,16 +169,17 @@ namespace AtTerm
             tty.Disconnected += text => Write(new DisconnectionEvent { Text = text });
             tty.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Title));
 
-            AddFavouritesCommand = new RelayCommand(() => AddToFavourites(QualifiedCommmandText), () => true);
+            AddFavouritesCommand = new RelayCommand(_ => AddToFavourites(QualifiedCommmandText));
 
-            SendCommand = new RelayCommand(() => Send(), () => true);
+            SendCommand = new RelayCommand(_ => Send());
 
-            ClearCommand = new RelayCommand(() => Log.Clear(), () => true);
+            ClearCommand = new RelayCommand(_ => Log.Clear());
 
-            LogCommand = new RelayCommand(() =>
-                LogFileName = $"{DateTime.Now:dd-MM-yyyy--HH-mm-ss}.tsv",
-                () => true
+            LogCommand = new RelayCommand(_ =>
+                LogFileName = $"{DateTime.Now:dd-MM-yyyy--HH-mm-ss}.tsv"                
             );
+
+            SwitchModeCommand = new RelayCommand(mode => CurrentMode = mode as string, _ => true);
 
             ResetHistoryCycle();
 

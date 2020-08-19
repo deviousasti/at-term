@@ -221,9 +221,12 @@
                 <ColumnDefinition Width="50"/>
             </Grid.ColumnDefinitions>
 
-            <controls:DropDownButton Content="AT+" BorderThickness="0" Background="{DynamicResource ThemeBg}" Foreground="#FF001EA4" FontSize="{StaticResource LargeFontSize}" ToolTip="Mode">
+            <controls:DropDownButton Content="{Binding CurrentMode}" BorderThickness="0" Background="{DynamicResource ThemeBg}" Foreground="#FF001EA4" FontSize="{StaticResource LargeFontSize}" ToolTip="Mode">
                 <controls:DropDownButton.DropDown>
-                    <ContextMenu FontSize="{StaticResource LargeFontSize}" ItemsSource="{Binding AvailableModes}"/>
+                    <ContextMenu>
+                        <MenuItem Header="Auto AT+ Mode" CommandParameter="AT+" Command="{Binding SwitchModeCommand}" />
+                        <MenuItem Header="Direct Mode" CommandParameter=">" Command="{Binding SwitchModeCommand}" />
+                    </ContextMenu>
                 </controls:DropDownButton.DropDown>
             </controls:DropDownButton>
 

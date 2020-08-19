@@ -4,19 +4,25 @@ namespace System.Windows
 {
     public class RelayCommand : ICommand
     {
-        protected Func<bool> CanExecuteFunc { get; }
+        protected Func<object, bool> CanExecuteFunc { get; }
 
-        protected Action ExecuteFunc { get; }
+        protected Action<object> ExecuteFunc { get; }
 
-        public RelayCommand(Action executeFunc, Func<bool> canExecuteFunc)
+        private static bool AlwaysEnabled(object _) => true;
+
+        public RelayCommand(Action<object> executeFunc) : this(executeFunc, AlwaysEnabled)
+        {
+        }
+
+        public RelayCommand(Action<object> executeFunc, Func<object, bool> canExecuteFunc)
         {
             CanExecuteFunc = canExecuteFunc;
             ExecuteFunc = executeFunc;
         }
 
-        public bool CanExecute(object parameter) => CanExecuteFunc();
+        public bool CanExecute(object parameter) => CanExecuteFunc(parameter);
 
-        public void Execute(object parameter) => ExecuteFunc();
+        public void Execute(object parameter) => ExecuteFunc(parameter);
 
         public event EventHandler CanExecuteChanged;
         protected virtual void OnCanExecuteChanged(object sender, EventArgs e)
